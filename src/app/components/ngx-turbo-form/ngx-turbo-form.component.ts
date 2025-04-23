@@ -20,7 +20,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { User } from '../../services/user.service';
 import { SearchResult } from '../../services/search.service';
 
 export interface TurboFormControlConfig {
@@ -120,7 +119,6 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit {
 
   formGroup!: FormGroup;
   formControls: Array<TurboFormControlConfig> = [];
-  user: User | null = null;
 
   loading = true;
   formSubmitted = false;
@@ -156,11 +154,6 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.initializeForm();
-
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      this.user = JSON.parse(userStr);
-    }
   }
 
   ngAfterViewInit(): void {
