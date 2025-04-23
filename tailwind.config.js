@@ -1,0 +1,63 @@
+ /** @type {import('tailwindcss').Config} */
+ export default {
+  content: ["./src/**/*.{html,js,ts}"],
+  theme: {
+    extend: {},
+  },
+  safelist: [
+    // Clases para el tema indigo
+    'bg-indigo-800',
+    'bg-indigo-700',
+    'bg-indigo-900',
+    'bg-indigo-600',
+    'bg-indigo-50',
+    'text-indigo-300',
+    'text-indigo-600',
+    'text-indigo-800',
+    'border-indigo-700',
+    'border-indigo-200',
+    'hover:bg-indigo-700',
+    'hover:bg-indigo-50',
+    'hover:text-indigo-600',
+    'hover:border-indigo-200',
+    'focus:ring-indigo-500',
+    'focus:border-indigo-500',
+    
+    // Clases para el tema teal
+    'bg-teal-800',
+    'bg-teal-700',
+    'bg-teal-900',
+    'bg-teal-600',
+    'bg-teal-50',
+    'text-teal-300',
+    'text-teal-600',
+    'text-teal-800',
+    'border-teal-700',
+    'border-teal-200',
+    'hover:bg-teal-700',
+    'hover:bg-teal-50',
+    'hover:text-teal-600',
+    'hover:border-teal-200',
+    'focus:ring-teal-500',
+    'focus:border-teal-500',
+
+    // Clases para el tema rose
+    'bg-rose-800',
+    'bg-rose-700',
+    'bg-rose-900',
+    'bg-rose-600',
+    'bg-rose-50',
+    'text-rose-300',
+    'text-rose-600',
+    'text-rose-800',
+    'border-rose-700',
+    'border-rose-200',
+    'hover:bg-rose-700',
+    'hover:bg-rose-50',
+    'hover:text-rose-600',
+    'hover:border-rose-200',
+    'focus:ring-rose-500',
+    'focus:border-rose-500'
+  ],
+  plugins: [],
+}

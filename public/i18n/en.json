@@ -1,0 +1,20 @@
+{
+    "grid": {
+        "title": "Grid",
+        "description": "Grid data"
+    },
+    "chart": {
+        "title": "Chart",
+        "description": "Chart data"
+    },
+    "form": {
+        "title": "Form",
+        "description": "Form data"
+    },
+    "validators": {
+        "required": "This field is required",
+        "minlength": "This field must be at least {{ minlength }} characters",
+        "maxlength": "This field must be at most {{ maxlength }} characters",
+        "email": "This field must be a valid email address"
+    }
+}

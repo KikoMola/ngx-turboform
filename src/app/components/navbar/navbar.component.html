@@ -1,0 +1,25 @@
+<nav class="bg-white shadow-md px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+  
+  <div class="flex-1">
+    <h1 class="text-xl font-bold" [ngClass]="getTitleClass()">Panel de Control</h1>
+  </div>
+  
+  <div class="flex items-center justify-center flex-1">
+    <div class="flex items-center px-4 py-2 rounded-full shadow-sm user-badge" 
+         [ngClass]="getUserBadgeClass()">
+      <fa-icon [icon]="faUser" class="mr-2" [ngClass]="getUserIconClass()"></fa-icon>
+      <span class="text-gray-800 font-medium">{{ user().name }}</span>
+    </div>
+  </div>
+  
+  <div class="flex items-center justify-end flex-1">
+    <button 
+      (click)="logout()" 
+      class="flex items-center bg-white text-gray-700 transition-colors px-4 py-2 rounded-lg shadow-sm border border-gray-200"
+      [ngClass]="getButtonHoverClass()"
+    >
+      <span class="mr-2">Salir</span>
+      <fa-icon [icon]="faSignOutAlt"></fa-icon>
+    </button>
+  </div>
+</nav>

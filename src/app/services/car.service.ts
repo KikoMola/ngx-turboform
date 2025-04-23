@@ -1,0 +1,601 @@
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+
+export interface Car {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  make: string;
+  model: string;
+  year: number;
+  color: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CarService {
+
+  CAR_LIST = [
+    {
+      "id": "1",
+      "name": "Corolla GRRRR",
+      "description": "Toyota Corolla",
+      "price": 10000,
+      "make": "Chevrolet",
+      "model": "Corolla",
+      "year": 2020,
+      "color": "Blanco"
+    },
+    {
+      "id": "2",
+      "name": "Yaris GR",
+      "description": "Toyota Yaris GR",
+      "price": 50000,
+      "make": "Toyota",
+      "model": "Yaris",
+      "year": 2024,
+      "color": "Rojo"
+    },
+    {
+      "id": "3",
+      "name": "Hilux",
+      "description": "Toyota Hilux",
+      "price": 100000,
+      "make": "Toyota",
+      "model": "Hilux",
+      "year": 2010,
+      "color": "Negro"
+    },
+    {
+      "id": "4",
+      "name": "208",
+      "description": "Peugeot 208",
+      "price": 6000,
+      "make": "Peugeot",
+      "model": "208",
+      "year": 2020,
+      "color": "Verde"
+    },
+    {
+      "id": "5",
+      "name": "Golf GTI",
+      "description": "Volkswagen Golf GTI",
+      "price": 35000,
+      "make": "Volkswagen",
+      "model": "Golf",
+      "year": 2022,
+      "color": "Azul"
+    },
+    {
+      "id": "6",
+      "name": "Civic Type R",
+      "description": "Honda Civic Type R",
+      "price": 42000,
+      "make": "Honda",
+      "model": "Civic",
+      "year": 2023,
+      "color": "Rojo"
+    },
+    {
+      "id": "7",
+      "name": "Mustang GT",
+      "description": "Ford Mustang GT",
+      "price": 55000,
+      "make": "Ford",
+      "model": "Mustang",
+      "year": 2021,
+      "color": "Amarillo"
+    },
+    {
+      "id": "8",
+      "name": "A3 Sportback",
+      "description": "Audi A3 Sportback",
+      "price": 32000,
+      "make": "Audi",
+      "model": "A3",
+      "year": 2022,
+      "color": "Gris"
+    },
+    {
+      "id": "9",
+      "name": "C-Class",
+      "description": "Mercedes-Benz C-Class",
+      "price": 48000,
+      "make": "Mercedes-Benz",
+      "model": "C-Class",
+      "year": 2023,
+      "color": "Plata"
+    },
+    {
+      "id": "10",
+      "name": "3 Series",
+      "description": "BMW 3 Series",
+      "price": 45000,
+      "make": "BMW",
+      "model": "3 Series",
+      "year": 2022,
+      "color": "Negro"
+    },
+    {
+      "id": "11",
+      "name": "Clio",
+      "description": "Renault Clio",
+      "price": 18000,
+      "make": "Renault",
+      "model": "Clio",
+      "year": 2021,
+      "color": "Naranja"
+    },
+    {
+      "id": "12",
+      "name": "Ibiza",
+      "description": "Seat Ibiza",
+      "price": 19500,
+      "make": "Seat",
+      "model": "Ibiza",
+      "year": 2022,
+      "color": "Rojo"
+    },
+    {
+      "id": "13",
+      "name": "500",
+      "description": "Fiat 500",
+      "price": 16000,
+      "make": "Fiat",
+      "model": "500",
+      "year": 2021,
+      "color": "Blanco"
+    },
+    {
+      "id": "14",
+      "name": "Qashqai",
+      "description": "Nissan Qashqai",
+      "price": 28000,
+      "make": "Nissan",
+      "model": "Qashqai",
+      "year": 2022,
+      "color": "Azul Marino"
+    },
+    {
+      "id": "15",
+      "name": "Sportage",
+      "description": "Kia Sportage",
+      "price": 29500,
+      "make": "Kia",
+      "model": "Sportage",
+      "year": 2023,
+      "color": "Verde Oscuro"
+    },
+    {
+      "id": "16",
+      "name": "Tucson",
+      "description": "Hyundai Tucson",
+      "price": 30000,
+      "make": "Hyundai",
+      "model": "Tucson",
+      "year": 2022,
+      "color": "Gris Plata"
+    },
+    {
+      "id": "17",
+      "name": "2008",
+      "description": "Peugeot 2008",
+      "price": 25000,
+      "make": "Peugeot",
+      "model": "2008",
+      "year": 2022,
+      "color": "Azul Eléctrico"
+    },
+    {
+      "id": "18",
+      "name": "Captur",
+      "description": "Renault Captur",
+      "price": 24000,
+      "make": "Renault",
+      "model": "Captur",
+      "year": 2021,
+      "color": "Naranja Metálico"
+    },
+    {
+      "id": "19",
+      "name": "Arona",
+      "description": "Seat Arona",
+      "price": 22000,
+      "make": "Seat",
+      "model": "Arona",
+      "year": 2022,
+      "color": "Azul Turquesa"
+    },
+    {
+      "id": "20",
+      "name": "T-Cross",
+      "description": "Volkswagen T-Cross",
+      "price": 23500,
+      "make": "Volkswagen",
+      "model": "T-Cross",
+      "year": 2021,
+      "color": "Naranja"
+    },
+    {
+      "id": "21",
+      "name": "X1",
+      "description": "BMW X1",
+      "price": 38000,
+      "make": "BMW",
+      "model": "X1",
+      "year": 2022,
+      "color": "Blanco Alpino"
+    },
+    {
+      "id": "22",
+      "name": "Q3",
+      "description": "Audi Q3",
+      "price": 39500,
+      "make": "Audi",
+      "model": "Q3",
+      "year": 2023,
+      "color": "Negro Brillante"
+    },
+    {
+      "id": "23",
+      "name": "GLA",
+      "description": "Mercedes-Benz GLA",
+      "price": 41000,
+      "make": "Mercedes-Benz",
+      "model": "GLA",
+      "year": 2022,
+      "color": "Gris Montaña"
+    },
+    {
+      "id": "24",
+      "name": "Juke",
+      "description": "Nissan Juke",
+      "price": 22500,
+      "make": "Nissan",
+      "model": "Juke",
+      "year": 2021,
+      "color": "Rojo Fuego"
+    },
+    {
+      "id": "25",
+      "name": "Stonic",
+      "description": "Kia Stonic",
+      "price": 21000,
+      "make": "Kia",
+      "model": "Stonic",
+      "year": 2022,
+      "color": "Amarillo"
+    },
+    {
+      "id": "26",
+      "name": "Kona",
+      "description": "Hyundai Kona",
+      "price": 23000,
+      "make": "Hyundai",
+      "model": "Kona",
+      "year": 2021,
+      "color": "Verde Lima"
+    },
+    {
+      "id": "27",
+      "name": "500X",
+      "description": "Fiat 500X",
+      "price": 24500,
+      "make": "Fiat",
+      "model": "500X",
+      "year": 2022,
+      "color": "Azul Italia"
+    },
+    {
+      "id": "28",
+      "name": "HR-V",
+      "description": "Honda HR-V",
+      "price": 26000,
+      "make": "Honda",
+      "model": "HR-V",
+      "year": 2023,
+      "color": "Plata Lunar"
+    },
+    {
+      "id": "29",
+      "name": "Puma",
+      "description": "Ford Puma",
+      "price": 24000,
+      "make": "Ford",
+      "model": "Puma",
+      "year": 2022,
+      "color": "Azul Báltico"
+    },
+    {
+      "id": "30",
+      "name": "C3 Aircross",
+      "description": "Citroën C3 Aircross",
+      "price": 22500,
+      "make": "Citroën",
+      "model": "C3 Aircross",
+      "year": 2021,
+      "color": "Arena"
+    },
+    {
+      "id": "31",
+      "name": "Ateca",
+      "description": "Seat Ateca",
+      "price": 28000,
+      "make": "Seat",
+      "model": "Ateca",
+      "year": 2022,
+      "color": "Rojo Velvet"
+    },
+    {
+      "id": "32",
+      "name": "Tiguan",
+      "description": "Volkswagen Tiguan",
+      "price": 32000,
+      "make": "Volkswagen",
+      "model": "Tiguan",
+      "year": 2023,
+      "color": "Gris Platino"
+    },
+    {
+      "id": "33",
+      "name": "X3",
+      "description": "BMW X3",
+      "price": 48000,
+      "make": "BMW",
+      "model": "X3",
+      "year": 2022,
+      "color": "Azul Fiordo"
+    },
+    {
+      "id": "34",
+      "name": "Q5",
+      "description": "Audi Q5",
+      "price": 49500,
+      "make": "Audi",
+      "model": "Q5",
+      "year": 2023,
+      "color": "Gris Daytona"
+    },
+    {
+      "id": "35",
+      "name": "GLC",
+      "description": "Mercedes-Benz GLC",
+      "price": 52000,
+      "make": "Mercedes-Benz",
+      "model": "GLC",
+      "year": 2022,
+      "color": "Negro Obsidiana"
+    },
+    {
+      "id": "36",
+      "name": "X-Trail",
+      "description": "Nissan X-Trail",
+      "price": 33000,
+      "make": "Nissan",
+      "model": "X-Trail",
+      "year": 2021,
+      "color": "Verde Oliva"
+    },
+    {
+      "id": "37",
+      "name": "Sorento",
+      "description": "Kia Sorento",
+      "price": 38000,
+      "make": "Kia",
+      "model": "Sorento",
+      "year": 2022,
+      "color": "Blanco Perla"
+    },
+    {
+      "id": "38",
+      "name": "Santa Fe",
+      "description": "Hyundai Santa Fe",
+      "price": 39000,
+      "make": "Hyundai",
+      "model": "Santa Fe",
+      "year": 2023,
+      "color": "Azul Marino"
+    },
+    {
+      "id": "39",
+      "name": "CR-V",
+      "description": "Honda CR-V",
+      "price": 34000,
+      "make": "Honda",
+      "model": "CR-V",
+      "year": 2022,
+      "color": "Bronce"
+    },
+    {
+      "id": "40",
+      "name": "Kuga",
+      "description": "Ford Kuga",
+      "price": 32500,
+      "make": "Ford",
+      "model": "Kuga",
+      "year": 2021,
+      "color": "Azul Metálico"
+    },
+    {
+      "id": "41",
+      "name": "C5 Aircross",
+      "description": "Citroën C5 Aircross",
+      "price": 31000,
+      "make": "Citroën",
+      "model": "C5 Aircross",
+      "year": 2022,
+      "color": "Gris Platino"
+    },
+    {
+      "id": "42",
+      "name": "3008",
+      "description": "Peugeot 3008",
+      "price": 33500,
+      "make": "Peugeot",
+      "model": "3008",
+      "year": 2023,
+      "color": "Cobre"
+    },
+    {
+      "id": "43",
+      "name": "Kadjar",
+      "description": "Renault Kadjar",
+      "price": 29000,
+      "make": "Renault",
+      "model": "Kadjar",
+      "year": 2022,
+      "color": "Rojo Deseo"
+    },
+    {
+      "id": "44",
+      "name": "Tarraco",
+      "description": "Seat Tarraco",
+      "price": 35000,
+      "make": "Seat",
+      "model": "Tarraco",
+      "year": 2021,
+      "color": "Gris Indio"
+    },
+    {
+      "id": "45",
+      "name": "Touareg",
+      "description": "Volkswagen Touareg",
+      "price": 58000,
+      "make": "Volkswagen",
+      "model": "Touareg",
+      "year": 2022,
+      "color": "Negro Profundo"
+    },
+    {
+      "id": "46",
+      "name": "X5",
+      "description": "BMW X5",
+      "price": 68000,
+      "make": "BMW",
+      "model": "X5",
+      "year": 2023,
+      "color": "Azul Tanzanita"
+    },
+    {
+      "id": "47",
+      "name": "Q7",
+      "description": "Audi Q7",
+      "price": 72000,
+      "make": "Audi",
+      "model": "Q7",
+      "year": 2022,
+      "color": "Blanco Glaciar"
+    },
+    {
+      "id": "48",
+      "name": "GLE",
+      "description": "Mercedes-Benz GLE",
+      "price": 75000,
+      "make": "Mercedes-Benz",
+      "model": "GLE",
+      "year": 2023,
+      "color": "Gris Selenita"
+    },
+    {
+      "id": "49",
+      "name": "Pathfinder",
+      "description": "Nissan Pathfinder",
+      "price": 52000,
+      "make": "Nissan",
+      "model": "Pathfinder",
+      "year": 2022,
+      "color": "Marrón Tierra"
+    },
+    {
+      "id": "50",
+      "name": "Telluride",
+      "description": "Kia Telluride",
+      "price": 48000,
+      "make": "Kia",
+      "model": "Telluride",
+      "year": 2023,
+      "color": "Verde Bosque"
+    },
+    {
+      "id": "51",
+      "name": "Palisade",
+      "description": "Hyundai Palisade",
+      "price": 49000,
+      "make": "Hyundai",
+      "model": "Palisade",
+      "year": 2022,
+      "color": "Azul Océano"
+    },
+    {
+      "id": "52",
+      "name": "Pilot",
+      "description": "Honda Pilot",
+      "price": 47000,
+      "make": "Honda",
+      "model": "Pilot",
+      "year": 2021,
+      "color": "Gris Acero"
+    },
+    {
+      "id": "53",
+      "name": "Explorer",
+      "description": "Ford Explorer",
+      "price": 53000,
+      "make": "Ford",
+      "model": "Explorer",
+      "year": 2022,
+      "color": "Azul Atlántico"
+    },
+    {
+      "id": "54",
+      "name": "5008",
+      "description": "Peugeot 5008",
+      "price": 38000,
+      "make": "Peugeot",
+      "model": "5008",
+      "year": 2023,
+      "color": "Gris Artense"
+    },
+    {
+      "id": "121d",
+      "name": "i8e",
+      "description": "BMW i8 eléctrico",
+      "model": "i8",
+      "make": "BMW",
+      "year": 2025,
+      "color": "Blanco",
+      "price": 80000
+    }
+  ]
+
+  getCars(): Observable<Car[]> {
+    return of(this.CAR_LIST);
+  }
+
+  createCar(car: Car): Observable<Car> {
+    const newId = Date.now().toString();
+    const newCar = { ...car, id: newId };
+    
+    this.CAR_LIST.push(newCar);
+    
+    return of(newCar);
+  }
+
+  updateCar(id: number, car: Car): Observable<Car> {
+    const index = this.CAR_LIST.findIndex(c => c.id === id.toString());
+    if (index !== -1) {
+      this.CAR_LIST[index] = { ...car };
+    }
+    
+    return of(car);
+  }
+
+  deleteCar(id: number): Observable<void> {
+    this.CAR_LIST = this.CAR_LIST.filter(car => car.id !== id.toString());
+    
+    return of(void 0);
+  }
+
+}
