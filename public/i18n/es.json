@@ -1,23 +1,19 @@
 {
-    "grid": {
-        "title": "Tabla",
-        "description": "Tabla de datos"
-    },
-    "chart": {
-        "title": "Gráfico",
-        "description": "Gráfico de datos"
-    },
     "form": {
         "title": "Formulario",
         "description": "Formulario de datos"
     },
+    "creator": {
+        "title": "Creador",
+        "description": "Creador de formulario"
+    },
     "validators": {
-        "required": "Este campo es requerido TRADUCIDO",
-        "minLength": "Este campo debe tener al menos {{ minLength }} caracteres TRADUCIDO",
-        "maxLength": "Este campo debe tener como máximo {{ maxLength }} caracteres TRADUCIDO",
-        "email": "Este campo debe ser una dirección de correo electrónico válida TRADUCIDO",
-        "min": "Este campo debe ser mayor que {{ min }} TRADUCIDO",
-        "max": "Este campo debe ser menor que {{ max }} TRADUCIDO",
-        "pattern": "Este campo debe cumplir con el patrón {{ pattern }} TRADUCIDO"
+        "required": "Este campo es requerido",
+        "minLength": "Este campo debe tener al menos {{ minLength }} caracteres",
+        "maxLength": "Este campo debe tener como máximo {{ maxLength }} caracteres",
+        "email": "Este campo debe ser una dirección de correo electrónico válida",
+        "min": "Este campo debe ser mayor que {{ min }}",
+        "max": "Este campo debe ser menor que {{ max }}",
+        "pattern": "Este campo debe cumplir con el patrón {{ pattern }}"
     }
 }

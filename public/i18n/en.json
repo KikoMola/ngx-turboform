@@ -1,11 +1,7 @@
 {
-    "grid": {
-        "title": "Grid",
-        "description": "Grid data"
-    },
-    "chart": {
-        "title": "Chart",
-        "description": "Chart data"
+    "creator": {
+        "title": "Creator",
+        "description": "Creator form"
     },
     "form": {
         "title": "Form",
