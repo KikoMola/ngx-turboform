@@ -131,9 +131,9 @@
 
         <!-- Previsualización de la Configuración Generada -->
         <div class="mt-8">
-            <h3 class="text-lg font-semibold mb-3">Configuración Generada (JSON)</h3>
+            <h3 class="text-lg font-semibold mb-3">Configuración Generada (TypeScript)</h3>
             @if (createdControls.length > 0) {
-                <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto"><code>{{ getGeneratedConfigJson() }}</code></pre>
+                <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto"><code>{{ getGeneratedConfigTypeScript() }}</code></pre>
             } @else {
                 <p class="text-gray-500">Aún no has añadido ningún control.</p>
             }

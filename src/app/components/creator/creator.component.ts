@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/cor
 import { TranslatePipe } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TurboFormControlConfig } from '../ngx-turbo-form/ngx-turbo-form.component';
+import { TurboFormControlConfig, TurboFormConfig } from '../ngx-turbo-form/ngx-turbo-form.component';
 
 const SIMPLE_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   'text', 'email', 'password', 'number', 'textarea', 'select',
@@ -19,7 +19,8 @@ const SIMPLE_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   ],
   templateUrl: './creator.component.html',
   styles: [
-    `:host { display: block; }`
+    `:host { display: block; }`,
+    `pre { max-height: 400px; overflow-y: auto; }`
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -145,24 +146,49 @@ export class CreatorComponent implements OnInit {
   addControl(): void {
     if (this.controlForm.valid) {
       const formValue = this.controlForm.getRawValue();
-
-      const newControlConfig: any = {
+       const newControlConfig: any = {
         type: formValue.type,
-        label: formValue.label,
-        name: formValue.name,
-        ...(formValue.placeholder && { placeholder: formValue.placeholder }),
-        ...(formValue.defaultValue !== '' && formValue.defaultValue !== null && { defaultValue: formValue.defaultValue }),
-        ...(formValue.colspanDesktop && { colspanDesktop: formValue.colspanDesktop }),
-        ...(formValue.colspanMobile && { colspanMobile: formValue.colspanMobile }),
-        ...(formValue.disabled && { disabled: formValue.disabled }),
       };
+
+       if (formValue.label || (formValue.type !== 'space')) {
+            newControlConfig.label = formValue.label;
+       }
+       if (formValue.name) {
+            newControlConfig.name = formValue.name;
+       }
+       if (formValue.placeholder) {
+           newControlConfig.placeholder = formValue.placeholder;
+       }
+       if (formValue.colspanDesktop && +formValue.colspanDesktop !== 6) {
+           newControlConfig.colspanDesktop = +formValue.colspanDesktop;
+       }
+       if (formValue.colspanMobile && +formValue.colspanMobile !== 12) {
+           newControlConfig.colspanMobile = +formValue.colspanMobile;
+       }
+        if (formValue.disabled) {
+            newControlConfig.disabled = true;
+        }
 
       if (formValue.required && formValue.type !== 'space' && formValue.type !== 'titleSeparator') {
         newControlConfig.validators = [{ type: 'required', message: 'validators.required' }];
       }
 
       if ((formValue.type === 'select' || formValue.type === 'radio') && formValue.options.length > 0) {
-        newControlConfig.options = formValue.options;
+        newControlConfig.options = formValue.options.map((opt: {value: any, label: string}) => ({
+            value: this.parseValue(opt.value),
+            label: opt.label
+        }));
+      }
+
+      if (formValue.defaultValue !== '' && formValue.defaultValue !== null) {
+          if (formValue.type === 'checkbox') {
+              const boolValue = String(formValue.defaultValue).toLowerCase() === 'true';
+              if (boolValue) {
+                   newControlConfig.defaultValue = true;
+              }
+          } else if (formValue.type !== 'space' && formValue.type !== 'titleSeparator') {
+             newControlConfig.defaultValue = this.parseValue(formValue.defaultValue);
+          }
       }
 
       if (formValue.type === 'space' || formValue.type === 'titleSeparator') {
@@ -171,22 +197,20 @@ export class CreatorComponent implements OnInit {
         delete newControlConfig.validators;
         delete newControlConfig.disabled;
         delete newControlConfig.options;
-        if (formValue.type === 'space') {
+        delete newControlConfig.colspanDesktop;
+        delete newControlConfig.colspanMobile;
+         if (formValue.type === 'space' || !formValue.label) {
           delete newControlConfig.label;
         }
+         if (!formValue.name) {
+             delete newControlConfig.name;
+         }
       }
 
       this.createdControls.push(newControlConfig as TurboFormControlConfig);
        this.controlForm.reset({
-            type: null,
-            label: '',
-            name: '',
-            placeholder: '',
-            defaultValue: '',
-            colspanDesktop: 6,
-            colspanMobile: 12,
-            disabled: false,
-            required: false,
+            type: null, label: '', name: '', placeholder: '', defaultValue: '',
+            colspanDesktop: 6, colspanMobile: 12, disabled: false, required: false,
        });
        this.options.clear();
        this.updateFormBasedOnType(null);
@@ -197,13 +221,36 @@ export class CreatorComponent implements OnInit {
     }
   }
 
-   getGeneratedConfigJson(): string {
-    const fullConfig = {
+  private parseValue(value: any): any {
+      if (typeof value !== 'string') return value;
+      const trimmedValue = value.trim();
+      if (trimmedValue.toLowerCase() === 'true') return true;
+      if (trimmedValue.toLowerCase() === 'false') return false;
+      if (trimmedValue !== '' && !isNaN(Number(trimmedValue))) {
+          if (trimmedValue === Number(trimmedValue).toString()) {
+             return Number(trimmedValue);
+          }
+      }
+      return value;
+  }
+
+   getGeneratedConfigTypeScript(): string {
+    const fullConfig: TurboFormConfig = {
         color: 'orange',
         submitText: 'Enviar',
         controls: this.createdControls
     };
-    return JSON.stringify(fullConfig, null, 2);
+
+    let tsString = JSON.stringify(fullConfig, null, 2);
+
+    tsString = tsString.replace(/"([a-zA-Z_$][a-zA-Z0-9_$]*)":\s*/g, '$1: ');
+
+    tsString = tsString.replace(/:\s*"((?:\\.|[^"\\])*)"/g, (match, group1) => {
+        const singleQuotedValue = group1.replace(/\\"/g, '"').replace(/'/g, "\\'");
+        return `: '${singleQuotedValue}'`;
+    });
+
+    return `export const formConfig: TurboFormConfig = ${tsString};`;
    }
 
 }
