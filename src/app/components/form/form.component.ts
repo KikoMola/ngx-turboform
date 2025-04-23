@@ -54,7 +54,7 @@ export class FormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.formConfig = {
-      color: 'teal',
+      color: 'orange',
       submitText: 'Enviar',
       controls: [
         {

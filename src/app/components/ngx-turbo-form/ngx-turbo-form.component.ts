@@ -98,7 +98,6 @@ export interface ValidatorConfig {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './ngx-turbo-form.component.html',
-  styleUrl: './ngx-turbo-form.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgxTurboFormComponent implements OnInit, AfterViewInit {
