@@ -58,16 +58,6 @@ export class FormComponent implements OnInit, OnDestroy, AfterViewInit {
       submitText: 'Enviar',
       controls: [
         {
-          type: 'text',
-          label: 'Nombre completo',
-          name: 'fullName',
-          defaultValue: 'Juan Perez',
-          placeholder: 'Ingrese su nombre completo',
-          colspanDesktop: 4,
-          colspanMobile: 12,
-          validators: [{ type: 'required', message: 'validators.required' }],
-        },
-        {
           type: 'email',
           label: 'Email',
           name: 'email',
