@@ -296,7 +296,16 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
       if (formValue.type === 'array' && formValue.arrayConfig) {
         const arrayConf = formValue.arrayConfig;
         newControlConfig.arrayConfig = {
-          controls: []
+          controls: [
+            {
+              type: 'text',
+              label: 'Campo en Array',
+              name: 'arrayInput',
+              placeholder: 'Valor...',
+              colspanDesktop: 12,
+              colspanMobile: 12
+            }
+          ]
         };
         if (arrayConf.addButtonText && arrayConf.addButtonText !== 'Añadir Fila') newControlConfig.arrayConfig.addButtonText = arrayConf.addButtonText;
         if (arrayConf.removeButtonText && arrayConf.removeButtonText !== 'Eliminar') newControlConfig.arrayConfig.removeButtonText = arrayConf.removeButtonText;
