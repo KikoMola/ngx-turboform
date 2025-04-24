@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  EventEmitter,
   inject,
   input,
-  Input,
   output,
-  Output,
   type OnInit,
-  ChangeDetectorRef,
-  AfterViewInit,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import {
   FormArray,
@@ -99,7 +98,7 @@ export interface ValidatorConfig {
   templateUrl: './ngx-turbo-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgxTurboFormComponent implements OnInit, AfterViewInit {
+export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
   config = input.required<TurboFormConfig>();
   formSubmit = output<any>();
 
@@ -156,9 +155,19 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit {
     this.initializeForm();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['config'] && !changes['config'].firstChange) {
+       console.log('Configuración cambiada, reinicializando formulario...', changes['config'].currentValue);
+      this.initializeForm();
+      this.initializePredictiveSearchDefaults(); 
+      this.cdr.markForCheck(); 
+    }
+  }
+
   ngAfterViewInit(): void {
     // Inicializar los campos de búsqueda predictiva con valores por defecto
     this.initializePredictiveSearchDefaults();
+    this.cdr.detectChanges();
   }
 
   private initializeForm() {

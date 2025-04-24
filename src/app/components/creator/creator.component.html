@@ -129,13 +129,21 @@
             </div>
         </form>
 
-        <!-- Previsualización de la Configuración Generada -->
+        <!-- Vista Previa del Formulario -->
         <div class="mt-8">
-            <h3 class="text-lg font-semibold mb-3">Configuración Generada (TypeScript)</h3>
-            @if (createdControls.length > 0) {
-                <pre class="bg-gray-100 p-4 rounded-md text-sm overflow-x-auto"><code>{{ getGeneratedConfigTypeScript() }}</code></pre>
+            <h3 class="text-lg font-semibold mb-3">Vista Previa del Formulario</h3>
+            @if (previewFormConfig().controls.length > 0) {
+                <div class="border p-4 rounded-md bg-gray-50">
+                     <ngx-turbo-form 
+                        #previewForm
+                        [config]="previewFormConfig()" 
+                        (formSubmit)="onSubmitPreview($event)"
+                        (searchRequest)="handleSearchRequest($event)"
+                        (loadDefaultValue)="handleLoadDefaultValue($event)">
+                    </ngx-turbo-form>
+                </div>
             } @else {
-                <p class="text-gray-500">Aún no has añadido ningún control.</p>
+                <p class="text-gray-500">Añade controles para ver la vista previa.</p>
             }
         </div>
 

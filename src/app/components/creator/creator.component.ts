@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, WritableSignal, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TurboFormControlConfig, TurboFormConfig } from '../ngx-turbo-form/ngx-turbo-form.component';
+import { TurboFormControlConfig, TurboFormConfig, NgxTurboFormComponent } from '../ngx-turbo-form/ngx-turbo-form.component';
+import { FormConfigService } from '../../services/form-config.service';
+import { SearchService, SearchResult } from '../../services/search.service';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 const SIMPLE_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   'text', 'email', 'password', 'number', 'textarea', 'select',
@@ -15,7 +19,8 @@ const SIMPLE_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   imports: [
     TranslatePipe,
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxTurboFormComponent
   ],
   templateUrl: './creator.component.html',
   styles: [
@@ -24,13 +29,27 @@ const SIMPLE_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreatorComponent implements OnInit {
+export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  @ViewChild('previewForm') previewFormComponent!: NgxTurboFormComponent;
 
   private fb = inject(FormBuilder);
+  private formConfigService = inject(FormConfigService);
+  private searchService = inject(SearchService);
 
   controlForm!: FormGroup;
 
   createdControls: TurboFormControlConfig[] = [];
+
+  previewFormConfig: WritableSignal<TurboFormConfig> = signal({
+    color: 'indigo',
+    submitText: 'Vista Previa Enviar',
+    controls: []
+  });
+
+  private searchTerms = new Subject<{ controlName: string; term: string; searchKey: string; }>();
+  private destroy$ = new Subject<void>();
+  private pendingDefaultValues: { controlName: string; id: string; searchKey: string; }[] = [];
 
   availableControlTypes = SIMPLE_CONTROL_TYPES;
 
@@ -40,6 +59,18 @@ export class CreatorComponent implements OnInit {
     this.controlForm.get('type')?.valueChanges.subscribe(type => {
       this.updateFormBasedOnType(type);
     });
+
+    this.setupSearchObservable();
+  }
+
+  ngAfterViewInit(): void {
+    this.processPendingDefaultValues();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.searchTerms.complete();
   }
 
   initializeForm(): void {
@@ -215,10 +246,29 @@ export class CreatorComponent implements OnInit {
        this.options.clear();
        this.updateFormBasedOnType(null);
 
+       this.previewFormConfig.update(config => ({
+         ...config,
+         controls: [...this.createdControls]
+       }));
+
     } else {
       this.controlForm.markAllAsTouched();
       console.error("Formulario inválido", this.controlForm.errors, this.controlForm.value);
     }
+  }
+
+  getGeneratedConfigObject(): TurboFormConfig {
+    return {
+        color: 'orange',
+        submitText: 'Enviar',
+        controls: this.createdControls
+    };
+  }
+
+  applyConfigToForm(): void {
+    const config = this.getGeneratedConfigObject();
+    this.formConfigService.updateFormConfig(config);
+    console.log('Configuración aplicada al formulario.');
   }
 
   private parseValue(value: any): any {
@@ -252,5 +302,74 @@ export class CreatorComponent implements OnInit {
 
     return `export const formConfig: TurboFormConfig = ${tsString};`;
    }
+
+   handleSearchRequest(event: {controlName: string, term: string, searchKey: string}): void {
+    console.log(`[Creator Preview] Búsqueda solicitada:`, event);
+    this.searchTerms.next(event);
+  }
+
+  handleLoadDefaultValue(event: { controlName: string; id: string; searchKey: string; }): void {
+     console.log(`[Creator Preview] Carga valor defecto solicitada:`, event);
+    if (this.previewFormComponent) {
+      this.loadDefaultValue(event);
+    } else {
+      this.pendingDefaultValues.push(event);
+    }
+  }
+
+  onSubmitPreview(formData: any): void {
+    console.log('[Creator Preview] Formulario enviado:', formData);
+  }
+
+  private setupSearchObservable(): void {
+    this.searchTerms.pipe(
+      debounceTime(500),
+      distinctUntilChanged((prev, curr) => 
+        prev.controlName === curr.controlName && 
+        prev.term === curr.term && 
+        prev.searchKey === curr.searchKey
+      ),
+      switchMap(({ controlName, term, searchKey }) => {
+        console.log(`[Creator Preview] Ejecutando búsqueda para ${controlName} con término "${term}"`);
+        return this.searchService.search(term).pipe(
+          switchMap(results => {
+            if (this.previewFormComponent) {
+              if (controlName.includes('_')) {
+                this.previewFormComponent.setArraySearchResults(controlName, results);
+              } else {
+                this.previewFormComponent.setSearchResults(controlName, results);
+              }
+            }
+            return [];
+          })
+        );
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
+  private loadDefaultValue(event: { controlName: string; id: string; searchKey: string; }): void {
+    const { controlName, id, searchKey } = event;
+    console.log(`[Creator Preview] Cargando valor por defecto para ${controlName} con ID "${id}"`);
+    this.searchService.getById(id).subscribe({
+      next: (result) => {
+        if (result && this.previewFormComponent) {
+          this.previewFormComponent.setDefaultSearchValue(controlName, result);
+        }
+      },
+      error: (error) => {
+        console.error(`[Creator Preview] Error al cargar valor por defecto para ${controlName}:`, error);
+      },
+    });
+  }
+
+  private processPendingDefaultValues(): void {
+    if (this.pendingDefaultValues.length > 0 && this.previewFormComponent) {
+      this.pendingDefaultValues.forEach((event) => {
+        this.loadDefaultValue(event);
+      });
+      this.pendingDefaultValues = [];
+    }
+  }
 
 }
