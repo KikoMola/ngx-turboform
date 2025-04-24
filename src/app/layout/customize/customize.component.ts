@@ -3,15 +3,14 @@ import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
 import { CreatorComponent } from '../../components/creator/creator.component';
 import { CodeComponent } from '../code/code.component';
 @Component({
-  selector: 'app-customize',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CreatorComponent,
-    CodeComponent
-  ],
-  templateUrl: './customize.component.html',
-  styles: `
+    selector: 'app-customize',
+    imports: [
+        CommonModule,
+        CreatorComponent,
+        CodeComponent
+    ],
+    templateUrl: './customize.component.html',
+    styles: `
     :host {
       display: block;
       width: 100%;
@@ -19,7 +18,7 @@ import { CodeComponent } from '../code/code.component';
       box-sizing: border-box;
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomizeComponent implements OnInit {
   

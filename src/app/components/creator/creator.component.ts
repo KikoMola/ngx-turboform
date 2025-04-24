@@ -7,6 +7,9 @@ import { FormConfigService } from '../../services/form-config.service';
 import { SearchService, SearchResult } from '../../services/search.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { Highlight } from 'ngx-highlightjs';
+import { HighlightLineNumbers } from 'ngx-highlightjs/line-numbers';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 const ALL_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   'text', 'email', 'password', 'number', 'textarea', 'select',
@@ -15,20 +18,22 @@ const ALL_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
 ];
 
 @Component({
-  selector: 'app-creator',
-  standalone: true,
-  imports: [
-    TranslatePipe,
-    CommonModule,
-    ReactiveFormsModule,
-    NgxTurboFormComponent
-  ],
-  templateUrl: './creator.component.html',
-  styles: [
-    `:host { display: block; }`,
-    `pre { max-height: 400px; overflow-y: auto; }`
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-creator',
+    imports: [
+        TranslatePipe,
+        CommonModule,
+        ReactiveFormsModule,
+        NgxTurboFormComponent,
+        Highlight,
+        HighlightLineNumbers,
+        ClipboardModule
+    ],
+    templateUrl: './creator.component.html',
+    styles: [
+        `:host { display: block; }`,
+        `pre { max-height: 400px; overflow-y: auto; }`
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -233,10 +238,10 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
        if (formValue.placeholder) {
            newControlConfig.placeholder = formValue.placeholder;
        }
-       if (formValue.colspanDesktop && +formValue.colspanDesktop !== 6) {
+       if (formValue.colspanDesktop) {
            newControlConfig.colspanDesktop = +formValue.colspanDesktop;
        }
-       if (formValue.colspanMobile && +formValue.colspanMobile !== 12) {
+       if (formValue.colspanMobile) {
            newControlConfig.colspanMobile = +formValue.colspanMobile;
        }
         if (formValue.disabled) {
@@ -341,7 +346,6 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
   applyConfigToForm(): void {
     const config = this.getGeneratedConfigObject();
     this.formConfigService.updateFormConfig(config);
-    console.log('Configuración aplicada al formulario.');
   }
 
   private parseValue(value: any): any {
@@ -377,12 +381,10 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
    }
 
    handleSearchRequest(event: {controlName: string, term: string, searchKey: string}): void {
-    console.log(`[Creator Preview] Búsqueda solicitada:`, event);
     this.searchTerms.next(event);
   }
 
   handleLoadDefaultValue(event: { controlName: string; id: string; searchKey: string; }): void {
-     console.log(`[Creator Preview] Carga valor defecto solicitada:`, event);
     if (this.previewFormComponent) {
       this.loadDefaultValue(event);
     } else {
@@ -403,7 +405,6 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
         prev.searchKey === curr.searchKey
       ),
       switchMap(({ controlName, term, searchKey }) => {
-        console.log(`[Creator Preview] Ejecutando búsqueda para ${controlName} con término "${term}"`);
         return this.searchService.search(term).pipe(
           switchMap(results => {
             if (this.previewFormComponent) {
@@ -423,7 +424,6 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private loadDefaultValue(event: { controlName: string; id: string; searchKey: string; }): void {
     const { controlName, id, searchKey } = event;
-    console.log(`[Creator Preview] Cargando valor por defecto para ${controlName} con ID "${id}"`);
     this.searchService.getById(id).subscribe({
       next: (result) => {
         if (result && this.previewFormComponent) {
@@ -443,6 +443,13 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
       this.pendingDefaultValues = [];
     }
+  }
+
+  // Método para manejar el evento de copia
+  onCopy(result: boolean): void {
+      if (result) {
+          console.log('Código copiado al portapapeles!');
+      }
   }
 
 }
