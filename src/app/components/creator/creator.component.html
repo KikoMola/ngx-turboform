@@ -144,44 +144,56 @@
 
             <!-- Configuración de Predictive Search -->
             @if (controlForm.get('type')?.value === 'predictiveSearch') {
-                <div formGroupName="searchConfig" class="space-y-3 border p-3 rounded-md bg-blue-50">
-                    <h4 class="text-md font-semibold text-blue-800">Configuración de Búsqueda Predictiva</h4>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="searchDisplayField" class="block text-sm font-medium text-gray-700">Campo a Mostrar (Display Field)</label>
-                            <input type="text" id="searchDisplayField" formControlName="displayField" class="mt-1 block w-full input-field">
-                        </div>
-                        <div>
-                            <label for="searchValueField" class="block text-sm font-medium text-gray-700">Campo de Valor (Value Field)</label>
-                            <input type="text" id="searchValueField" formControlName="valueField" class="mt-1 block w-full input-field">
-                        </div>
-                        <div>
-                            <label for="searchMinLength" class="block text-sm font-medium text-gray-700">Longitud Mínima (Min Length)</label>
-                            <input type="number" id="searchMinLength" formControlName="minLength" min="1" class="mt-1 block w-full input-field">
-                        </div>
-                        <div>
-                            <label for="searchKey" class="block text-sm font-medium text-gray-700">Clave de Búsqueda (Search Key)</label>
-                            <input type="text" id="searchKey" formControlName="searchKey" placeholder="Ej: users, products" class="mt-1 block w-full input-field">
-                        </div>
+            <div formGroupName="searchConfig" class="space-y-3 border p-3 rounded-md bg-blue-50">
+                <h4 class="text-md font-semibold text-blue-800">Configuración de Búsqueda Predictiva</h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="searchDisplayField" class="block text-sm font-medium text-gray-700">Campo a Mostrar
+                            (Display Field)</label>
+                        <input type="text" id="searchDisplayField" formControlName="displayField"
+                            class="mt-1 block w-full input-field">
+                    </div>
+                    <div>
+                        <label for="searchValueField" class="block text-sm font-medium text-gray-700">Campo de Valor
+                            (Value Field)</label>
+                        <input type="text" id="searchValueField" formControlName="valueField"
+                            class="mt-1 block w-full input-field">
+                    </div>
+                    <div>
+                        <label for="searchMinLength" class="block text-sm font-medium text-gray-700">Longitud Mínima
+                            (Min Length)</label>
+                        <input type="number" id="searchMinLength" formControlName="minLength" min="1"
+                            class="mt-1 block w-full input-field">
+                    </div>
+                    <div>
+                        <label for="searchKey" class="block text-sm font-medium text-gray-700">Clave de Búsqueda (Search
+                            Key)</label>
+                        <input type="text" id="searchKey" formControlName="searchKey" placeholder="Ej: users, products"
+                            class="mt-1 block w-full input-field">
                     </div>
                 </div>
+            </div>
             }
 
             <!-- Configuración de Array -->
             @if (controlForm.get('type')?.value === 'array') {
-                <div formGroupName="arrayConfig" class="space-y-3 border p-3 rounded-md bg-green-50">
-                    <h4 class="text-md font-semibold text-green-800">Configuración de Array</h4>
-                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="arrayAddButtonText" class="block text-sm font-medium text-gray-700">Texto Botón Añadir</label>
-                            <input type="text" id="arrayAddButtonText" formControlName="addButtonText" class="mt-1 block w-full input-field">
-                        </div>
-                        <div>
-                            <label for="arrayRemoveButtonText" class="block text-sm font-medium text-gray-700">Texto Botón Eliminar</label>
-                            <input type="text" id="arrayRemoveButtonText" formControlName="removeButtonText" class="mt-1 block w-full input-field">
-                        </div>
+            <div formGroupName="arrayConfig" class="space-y-3 border p-3 rounded-md bg-green-50">
+                <h4 class="text-md font-semibold text-green-800">Configuración de Array</h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="arrayAddButtonText" class="block text-sm font-medium text-gray-700">Texto Botón
+                            Añadir</label>
+                        <input type="text" id="arrayAddButtonText" formControlName="addButtonText"
+                            class="mt-1 block w-full input-field">
+                    </div>
+                    <div>
+                        <label for="arrayRemoveButtonText" class="block text-sm font-medium text-gray-700">Texto Botón
+                            Eliminar</label>
+                        <input type="text" id="arrayRemoveButtonText" formControlName="removeButtonText"
+                            class="mt-1 block w-full input-field">
                     </div>
                 </div>
+            </div>
             }
 
 
@@ -219,20 +231,29 @@
     <!-- Vista Previa del código TypeScript -->
     <div class="m-8">
         <h3 class="text-lg font-semibold mb-3">Vista Previa del Código TypeScript</h3>
+        <p>Este es el código TypeScript del formulario. Debe copiarlo y pegarlo en el archivo TypeScript del
+            componente creado para usar el formulario.</p>
+        @if (previewFormConfig().controls.length > 0) {
         <!-- Contenedor relativo para posicionar el botón -->
         <div class="relative">
-             <pre><code [highlight]="getGeneratedConfigTypeScript()" language="typescript" lineNumbers></code></pre>
-             <!-- Botón de copiar -->
-             <button
-                type="button"
-                [cdkCopyToClipboard]="getGeneratedConfigTypeScript()"
-                (cdkCopyToClipboardCopied)="onCopy($event)" 
+            <pre><code [highlight]="getGeneratedConfigTypeScript()" language="typescript" lineNumbers></code></pre>
+            <!-- Botón de copiar -->
+            <button type="button" [cdkCopyToClipboard]="getGeneratedConfigTypeScript()"
+                (cdkCopyToClipboardCopied)="onCopy($event)"
                 class="absolute top-2 right-2 p-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                title="Copiar al portapapeles"
-             >
-                 <!-- Icono SVG de copiar (ejemplo) -->
-                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                title="Copiar al portapapeles">
+                <!-- Icono SVG de copiar (ejemplo) -->
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z">
+                    </path>
+                </svg>
             </button>
         </div>
+        } @else {
+        <p class="text-gray-500">Añade controles para ver el código TypeScript.</p>
+        }
+
     </div>
 </div>
