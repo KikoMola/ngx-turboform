@@ -451,3 +451,224 @@ export const fullHtml = `
     {{ config().submitText || 'Submit' | translate }}
   </button>
 </form>`
+
+export const essentialNgxTurboFormTsCode = `
+import { CommonModule } from '@angular/common';
+import {
+  AfterViewInit, // Necesario si se mantiene initializePredictiveSearchDefaults
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  input,
+  OnChanges, // Necesario para reaccionar a cambios de config
+  output,
+  SimpleChanges,
+  type OnInit
+} from '@angular/core';
+import {
+  FormArray, // Necesario si se mantiene addArrayRow aunque sea básico
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+// Importar interfaces definidas arriba o en otro fichero
+// import { TurboFormConfig, TurboFormControlConfig, ValidatorConfig } from './interfaces';
+
+@Component({
+    selector: 'ngx-turbo-form',
+    standalone: true, // Asumiendo standalone
+    imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+    templateUrl: './ngx-turbo-form.component.html', // Referencia al HTML
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class NgxTurboFormComponent implements OnInit, OnChanges {
+  config = input.required<TurboFormConfig>();
+  formSubmit = output<any>();
+
+  formGroup!: FormGroup;
+  formControls: Array<TurboFormControlConfig> = [];
+  formSubmitted = false;
+
+  // --- Mapeos Internos Esenciales ---
+  private readonly ERROR_PARAM_MAP: Record<string, string> = {
+    minlength: 'minLength',
+    maxlength: 'maxLength',
+    min: 'min',
+    max: 'max',
+    pattern: 'pattern',
+  };
+
+  private readonly VALIDATOR_MAP: Record<string, (value?: any) => any> = {
+    required: () => Validators.required,
+    minLength: (value) => Validators.minLength(value),
+    maxLength: (value) => Validators.maxLength(value),
+    pattern: (value) => Validators.pattern(value),
+    email: () => Validators.email,
+    min: (value) => Validators.min(value),
+    max: (value) => Validators.max(value),
+  };
+
+  // --- Inyección de Dependencias Esenciales ---
+  private translateService = inject(TranslateService);
+  private cdr = inject(ChangeDetectorRef);
+
+  // --- Ciclo de Vida y Cambios ---
+  ngOnInit(): void {
+    this.initializeForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Reinicializar si la configuración cambia dinámicamente
+    if (changes['config'] && !changes['config'].firstChange) {
+      this.initializeForm();
+      // Podrías necesitar re-inicializar valores por defecto aquí
+      this.cdr.markForCheck();
+    }
+  }
+
+  // --- Inicialización del Formulario ---
+  private initializeForm() {
+    const group: any = {};
+    this.formControls = this.config().controls;
+
+    this.formControls.forEach((control) => {
+      // Omitir tipos especiales que no crean FormControl
+      if (control.type === 'space' || control.type === 'titleSeparator') return;
+      // Omitir array para la versión esencial (o manejarlo muy básico)
+      if (control.type === 'array') return;
+
+      const validators = this.getValidators(control);
+      const defaultValue = control.defaultValue ?? '';
+
+      group[control.name] = new FormControl(
+        { value: defaultValue, disabled: !!control.disabled },
+        validators
+      );
+    });
+
+    this.formGroup = new FormGroup(group);
+    // Se podría añadir lógica básica para FormArray si se decide incluir
+  }
+
+  private getValidators(control: TurboFormControlConfig): any[] {
+    const validators = [];
+    if (control.validators) {
+      for (const validator of control.validators) {
+        const validatorFn = this.VALIDATOR_MAP[validator.type];
+        if (validatorFn) {
+          validators.push(validatorFn(validator.value));
+        }
+      }
+    }
+    return validators;
+  }
+
+  // --- Envío del Formulario ---
+  onSubmit() {
+    this.formSubmitted = true;
+    if (this.formGroup.valid) {
+      this.formSubmit.emit(this.formGroup.value);
+    } else {
+      this.markFormGroupTouched(this.formGroup);
+    }
+  }
+
+  // --- Manejo de Errores ---
+  getControlError(controlName: string): string | null {
+    const control = this.formGroup.get(controlName);
+
+    if (control?.errors && (control.touched || control.dirty || this.formSubmitted)) {
+      const errorKeys = Object.keys(control.errors);
+      const controlConfig = this.formControls.find(c => c.name === controlName);
+      if (!controlConfig?.validators) return null; // Salir si no hay config de validadores
+
+      // Priorizar 'required'
+      const requiredErrorKey = errorKeys.find(key => key === 'required');
+      const errorKeyToShow = requiredErrorKey || errorKeys[0];
+      
+      const validatorConfig = controlConfig.validators.find(
+        (v) => v.type.toLowerCase() === errorKeyToShow.toLowerCase()
+      );
+
+      if (validatorConfig) {
+        const params: any = {};
+        const paramName = this.ERROR_PARAM_MAP[errorKeyToShow.toLowerCase()];
+        if (paramName && validatorConfig.value !== undefined) {
+          params[paramName] = validatorConfig.value;
+        }
+        // Devolver clave y parámetros para el pipe translate
+        return JSON.stringify({ key: validatorConfig.message, params });
+      }
+    }
+    return null;
+  }
+
+  // Marca todos los controles como tocados (para mostrar errores al enviar)
+  private markFormGroupTouched(formGroup: FormGroup | FormArray) {
+    Object.values(formGroup.controls).forEach((control) => {
+      control.markAsTouched();
+      control.markAsDirty();
+      if (control instanceof FormGroup || control instanceof FormArray) {
+        this.markFormGroupTouched(control);
+      }
+    });
+  }
+
+  // --- Traducción y Ayudantes Template ---
+  translateWithParams(message: string): string {
+    try {
+      const errorObj = JSON.parse(message);
+      return this.translateService.instant(errorObj.key, errorObj.params);
+    } catch (e) {
+      // Si no es JSON, intentar traducir directamente
+      return this.translateService.instant(message);
+    }
+  }
+
+  isRequired(control: TurboFormControlConfig): boolean {
+    return control.validators?.some((v) => v.type === 'required') || false;
+  }
+
+  // --- Métodos para Clases Dinámicas (Usados en el HTML) ---
+  getThemeColor(): string {
+    return this.config().color || 'indigo'; // Color por defecto
+  }
+
+  getButtonClass(): string {
+    const color = this.getThemeColor();
+    return \`bg-\${color}-600 hover:bg-\${color}-700\`;
+  }
+
+  getFocusRingClass(): string {
+    const color = this.getThemeColor();
+    return \`focus:ring-\${color}-500 focus:border-\${color}-500\`;
+  }
+
+  getInputClasses(control: TurboFormControlConfig): any {
+    // Clases base comunes
+    const baseClasses = [
+        'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm ',
+        'focus:outline-none focus:ring-2 transition-colors',
+        this.getFocusRingClass()
+    ];
+    
+    // Clases específicas para checkbox/radio (simplificado)
+    if (control.type === 'checkbox' || control.type === 'radio') {
+      return { 
+        'w-4 h-4 border-gray-300 rounded': true, 
+        // Añadir clases focus/theme si es necesario para estos tipos
+      }; 
+    }
+    
+    // Añadir clase disabled si aplica
+    if (this.formGroup.get(control.name)?.disabled) {
+      baseClasses.push('bg-gray-100 cursor-not-allowed');
+    }
+
+    return baseClasses;
+  }
+}
+`

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
-import { interfaceTurboFormConfig, interfaceTurboFormControlConfig, fullHtml } from '../../components/ngx-turbo-form/constants/constants';
+import { interfaceTurboFormConfig, interfaceTurboFormControlConfig, fullHtml, essentialNgxTurboFormTsCode } from '../../components/ngx-turbo-form/constants/constants';
 import { Highlight } from 'ngx-highlightjs';
 import { HighlightLineNumbers } from 'ngx-highlightjs/line-numbers';
 import { ClipboardModule } from '@angular/cdk/clipboard';
@@ -30,6 +30,8 @@ export class CodeComponent implements OnInit {
   INTERFACE_TURBO_FORM_CONFIG = interfaceTurboFormConfig;
 
   FULL_HTML = fullHtml;
+
+  ESSENTIAL_TS_CODE = essentialNgxTurboFormTsCode;
 
   ngOnInit(): void { }
 
