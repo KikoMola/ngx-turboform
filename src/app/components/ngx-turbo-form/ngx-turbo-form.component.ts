@@ -156,7 +156,6 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['config'] && !changes['config'].firstChange) {
-       console.log('Configuración cambiada, reinicializando formulario...', changes['config'].currentValue);
       this.initializeForm();
       this.initializePredictiveSearchDefaults(); 
       this.cdr.markForCheck(); 
@@ -228,7 +227,6 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   onSubmit() {
-    console.log(this.formGroup.getRawValue());
     this.formSubmitted = true;
     if (this.formGroup.valid) {
       this.formSubmit.emit(this.formGroup.value);
@@ -527,8 +525,6 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
       // Inicializar campos de búsqueda predictiva normales
       if (control.type === 'predictiveSearch' && control.defaultValue) {
         const searchKey = control.searchConfig?.searchKey || control.name;
-
-        console.log(`Inicializando valor por defecto para campo normal ${control.name}: ${control.defaultValue}`);
         
         // Emitir evento para cargar el valor por defecto
         this.loadDefaultValue.emit({
@@ -548,10 +544,7 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
           control.arrayConfig.controls.forEach(rowControl => {
             if (rowControl.type === 'predictiveSearch' && rowControl.defaultValue) {
               const searchKey = rowControl.searchConfig?.searchKey || rowControl.name;
-              const uniqueKey = `${control.name}_${rowIndex}_${rowControl.name}`;
-              
-              console.log(`Inicializando valor por defecto para campo en formArray ${uniqueKey}: ${rowControl.defaultValue}`);
-              
+              const uniqueKey = `${control.name}_${rowIndex}_${rowControl.name}`;              
               // Emitir evento para cargar el valor por defecto
               this.loadDefaultValue.emit({
                 controlName: uniqueKey,
@@ -571,7 +564,6 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
    * @param result Resultado a establecer como valor por defecto
    */
   setDefaultSearchValue(controlName: string, result: SearchResult): void {
-    console.log(`Estableciendo valor por defecto para ${controlName}:`, result);
     
     // Verificar si es un control dentro de un formArray
     if (controlName.includes('_')) {
@@ -581,8 +573,6 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
         const arrayName = parts[0];
         const rowIndex = parseInt(parts[1]);
         const rowControlName = parts[2];
-        
-        console.log(`Control en formArray: array=${arrayName}, row=${rowIndex}, control=${rowControlName}`);
         
         // Obtener la configuración del control
         const arrayConfig = this.formControls.find(c => c.name === arrayName)?.arrayConfig;
@@ -616,14 +606,12 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
         
         // Establecer el ID como valor del control
         const realValue = result[valueField as keyof SearchResult];
-        console.log(`Estableciendo valor ${realValue} para ${controlName}`);
         formControl.setValue(realValue);
         
         // Actualizar el texto mostrado en el input
         setTimeout(() => {
           const inputElement = document.getElementById(`${rowControlName}_${rowIndex}`) as HTMLInputElement;
           if (inputElement) {
-            console.log(`Estableciendo texto "${result.text}" en input ${rowControlName}_${rowIndex}`);
             inputElement.value = result.text;
           } else {
             console.error(`Elemento input con id ${rowControlName}_${rowIndex} no encontrado`);
@@ -654,14 +642,12 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
       
       // Establecer el ID como valor del control
       const realValue = result[valueField as keyof SearchResult];
-      console.log(`Estableciendo valor ${realValue} para ${controlName}`);
       formControl.setValue(realValue);
       
       // Actualizar el texto mostrado en el input
       setTimeout(() => {
         const inputElement = document.getElementById(controlName) as HTMLInputElement;
         if (inputElement) {
-          console.log(`Estableciendo texto "${result.text}" en input ${controlName}`);
           inputElement.value = result.text;
         } else {
           console.error(`Elemento input con id ${controlName} no encontrado`);

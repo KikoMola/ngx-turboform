@@ -346,7 +346,6 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
   applyConfigToForm(): void {
     const config = this.getGeneratedConfigObject();
     this.formConfigService.updateFormConfig(config);
-    console.log('Configuración aplicada al formulario.');
   }
 
   private parseValue(value: any): any {
@@ -382,12 +381,10 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
    }
 
    handleSearchRequest(event: {controlName: string, term: string, searchKey: string}): void {
-    console.log(`[Creator Preview] Búsqueda solicitada:`, event);
     this.searchTerms.next(event);
   }
 
   handleLoadDefaultValue(event: { controlName: string; id: string; searchKey: string; }): void {
-     console.log(`[Creator Preview] Carga valor defecto solicitada:`, event);
     if (this.previewFormComponent) {
       this.loadDefaultValue(event);
     } else {
@@ -408,7 +405,6 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
         prev.searchKey === curr.searchKey
       ),
       switchMap(({ controlName, term, searchKey }) => {
-        console.log(`[Creator Preview] Ejecutando búsqueda para ${controlName} con término "${term}"`);
         return this.searchService.search(term).pipe(
           switchMap(results => {
             if (this.previewFormComponent) {
@@ -428,7 +424,6 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private loadDefaultValue(event: { controlName: string; id: string; searchKey: string; }): void {
     const { controlName, id, searchKey } = event;
-    console.log(`[Creator Preview] Cargando valor por defecto para ${controlName} con ID "${id}"`);
     this.searchService.getById(id).subscribe({
       next: (result) => {
         if (result && this.previewFormComponent) {
@@ -454,9 +449,6 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
   onCopy(result: boolean): void {
       if (result) {
           console.log('Código copiado al portapapeles!');
-          // Aquí podrías añadir lógica para mostrar un mensaje temporal al usuario
-      } else {
-          console.error('Error al copiar el código.');
       }
   }
 

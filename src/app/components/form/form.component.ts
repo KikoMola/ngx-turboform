@@ -338,7 +338,6 @@ export class FormComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   handleSearchRequest(event: {controlName: string, term: string, searchKey: string}): void {
     const { controlName, term, searchKey } = event;
-    console.log(`Búsqueda solicitada para ${controlName} con término "${term}" y clave "${searchKey}"`);
     
     // Enviar la solicitud al subject para aplicar el debounce
     this.searchTerms.next(event);
@@ -362,9 +361,7 @@ export class FormComponent implements OnInit, OnDestroy, AfterViewInit {
         prev.searchKey === curr.searchKey
       ),
       // Cambiar al observable de búsqueda
-      switchMap(({ controlName, term, searchKey }) => {
-        console.log(`Ejecutando búsqueda para ${controlName} con término "${term}" después del debounce`);
-        
+      switchMap(({ controlName, term, searchKey }) => {        
         // Segun el searchKey, se usa un servicio u otro
         return this.searchService.search(term).pipe(
           // Mapear los resultados para incluir el nombre del control
@@ -408,12 +405,6 @@ export class FormComponent implements OnInit, OnDestroy, AfterViewInit {
     searchKey: string;
   }): void {
     const { controlName, id, searchKey } = event;
-    console.log(
-      `Cargando valor por defecto para ${controlName} con ID "${id}" y clave "${searchKey}"`
-    );
-
-    // En funcion del searchKey, se usa un servicio u otro
-
     // Obtener el resultado por ID
     this.searchService.getById(id).subscribe({
       next: (result) => {
