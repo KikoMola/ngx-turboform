@@ -20,7 +20,7 @@ import {
 } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SearchResult } from '../../services/search.service';
-
+import { interfaceTurboFormControlConfig, interfaceTurboFormConfig } from './constants/constants';
 export interface TurboFormControlConfig {
   type:
     | 'text'
@@ -59,6 +59,8 @@ export interface TurboFormControlConfig {
   }; // Para predictiveSearch
 }
 
+const INTERFACE_TURBO_FORM_CONTROL_CONFIG = interfaceTurboFormControlConfig;
+
 export interface TurboFormConfig {
   controls: Array<TurboFormControlConfig>;
   submitText?: string;
@@ -77,6 +79,8 @@ export interface TurboFormConfig {
     | 'indigo'
     | 'rose';
 }
+
+const INTERFACE_TURBO_FORM_CONFIG = interfaceTurboFormConfig;
 
 export interface ValidatorConfig {
   type:
