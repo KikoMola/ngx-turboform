@@ -1,14 +1,12 @@
-import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
-import { FormComponent } from '../../components/form/form.component';
-import { CreatorComponent } from '../../components/creator/creator.component';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
+import { CreatorComponent } from '../../components/creator/creator.component';
 import { CodeComponent } from '../code/code.component';
 @Component({
   selector: 'app-customize',
   standalone: true,
   imports: [
     CommonModule,
-    FormComponent,
     CreatorComponent,
     CodeComponent
   ],

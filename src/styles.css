@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* You can add global styles to this file, and also import other style files */
+
+/* Configuración base para altura completa y sin márgenes */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif; /* O la fuente que prefieras */
+}
+
+/* Configurar app-root para layout flex vertical */
+app-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Clase de utilidad para inputs (ejemplo, puedes ajustarla) */
+.input-field {
+    /* Clases base de Tailwind aplicadas en el HTML, pero puedes añadir más aquí si es necesario */
+    @apply mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm;
+}

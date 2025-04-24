@@ -8,9 +8,10 @@ import { SearchService, SearchResult } from '../../services/search.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
-const SIMPLE_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
+const ALL_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   'text', 'email', 'password', 'number', 'textarea', 'select',
-  'checkbox', 'radio', 'date', 'space', 'titleSeparator'
+  'checkbox', 'radio', 'date', 'space', 'titleSeparator',
+  'predictiveSearch', 'array'
 ];
 
 @Component({
@@ -24,7 +25,7 @@ const SIMPLE_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   ],
   templateUrl: './creator.component.html',
   styles: [
-    `:host { display: block; height: 100vh; }`,
+    `:host { display: block; }`,
     `pre { max-height: 400px; overflow-y: auto; }`
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,7 +52,7 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$ = new Subject<void>();
   private pendingDefaultValues: { controlName: string; id: string; searchKey: string; }[] = [];
 
-  availableControlTypes = SIMPLE_CONTROL_TYPES;
+  availableControlTypes = ALL_CONTROL_TYPES;
 
   ngOnInit(): void {
     this.initializeForm();
@@ -84,7 +85,17 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
       colspanMobile: [12],
       disabled: [false],
       required: [false],
-      options: this.fb.array([])
+      options: this.fb.array([]),
+      searchConfig: this.fb.group({ 
+        displayField: ['text'],
+        valueField: ['id'],
+        minLength: [2, Validators.min(1)],
+        searchKey: ['']
+      }),
+      arrayConfig: this.fb.group({ 
+        addButtonText: ['Añadir Fila'],
+        removeButtonText: ['Eliminar'],
+      })
     });
     this.updateFormBasedOnType(null);
   }
@@ -92,12 +103,17 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
   updateFormBasedOnType(type: TurboFormControlConfig['type'] | null): void {
     const fieldsToReset = ['placeholder', 'defaultValue', 'required', 'disabled'];
     const commonFields = ['label', 'name', 'colspanDesktop', 'colspanMobile'];
+    const optionsArray = this.controlForm.get('options') as FormArray;
+    const searchConfigGroup = this.controlForm.get('searchConfig') as FormGroup;
+    const arrayConfigGroup = this.controlForm.get('arrayConfig') as FormGroup;
 
     if (!type || type === 'space' || type === 'titleSeparator') {
       commonFields.forEach(fieldName => this.controlForm.get(fieldName)?.disable());
       fieldsToReset.forEach(fieldName => this.controlForm.get(fieldName)?.disable());
-      this.controlForm.get('options')?.disable();
-       if(type === 'titleSeparator') {
+      optionsArray.disable();
+      searchConfigGroup.disable();
+      arrayConfigGroup.disable();
+      if(type === 'titleSeparator') {
           this.controlForm.get('label')?.enable();
           this.controlForm.get('label')?.setValidators(Validators.required);
        } else {
@@ -141,7 +157,6 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
         this.controlForm.get('required')?.enable();
     }
 
-    const optionsArray = this.controlForm.get('options') as FormArray;
     if (type === 'select' || type === 'radio') {
       optionsArray.enable();
       if (optionsArray.length === 0) {
@@ -151,6 +166,34 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
       optionsArray.disable();
       optionsArray.clear();
     }
+
+    if (type === 'predictiveSearch') {
+      searchConfigGroup.enable();
+      this.controlForm.get('placeholder')?.enable();
+      this.controlForm.get('defaultValue')?.enable();
+    } else {
+      searchConfigGroup.disable();
+    }
+
+    if (type === 'array') {
+      arrayConfigGroup.enable();
+      fieldsToReset.forEach(fieldName => this.controlForm.get(fieldName)?.disable());
+    } else {
+      arrayConfigGroup.disable();
+    }
+
+    if (type === 'space' || type === 'titleSeparator' || type === 'array' || type === 'predictiveSearch') {
+       this.controlForm.get('required')?.disable();
+       this.controlForm.get('required')?.reset(false);
+    }
+     if (type === 'array') {
+       this.controlForm.get('disabled')?.disable();
+       this.controlForm.get('disabled')?.reset(false);
+     }
+     if (type === 'predictiveSearch') {
+       this.controlForm.get('disabled')?.enable();
+       this.controlForm.get('required')?.enable();
+     }
 
      this.controlForm.updateValueAndValidity();
   }
@@ -236,6 +279,36 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
          if (!formValue.name) {
              delete newControlConfig.name;
          }
+      }
+
+      if (formValue.type === 'predictiveSearch' && formValue.searchConfig) {
+         const searchConf = formValue.searchConfig;
+         newControlConfig.searchConfig = {};
+         if (searchConf.displayField && searchConf.displayField !== 'text') newControlConfig.searchConfig.displayField = searchConf.displayField;
+         if (searchConf.valueField && searchConf.valueField !== 'id') newControlConfig.searchConfig.valueField = searchConf.valueField;
+         if (searchConf.minLength && +searchConf.minLength !== 2) newControlConfig.searchConfig.minLength = +searchConf.minLength;
+         if (searchConf.searchKey) newControlConfig.searchConfig.searchKey = searchConf.searchKey;
+         if (Object.keys(newControlConfig.searchConfig).length === 0) {
+           delete newControlConfig.searchConfig;
+         }
+      }
+
+      if (formValue.type === 'array' && formValue.arrayConfig) {
+        const arrayConf = formValue.arrayConfig;
+        newControlConfig.arrayConfig = {
+          controls: [
+            {
+              type: 'text',
+              label: 'Campo en Array',
+              name: 'arrayInput',
+              placeholder: 'Valor...',
+              colspanDesktop: 12,
+              colspanMobile: 12
+            }
+          ]
+        };
+        if (arrayConf.addButtonText && arrayConf.addButtonText !== 'Añadir Fila') newControlConfig.arrayConfig.addButtonText = arrayConf.addButtonText;
+        if (arrayConf.removeButtonText && arrayConf.removeButtonText !== 'Eliminar') newControlConfig.arrayConfig.removeButtonText = arrayConf.removeButtonText;
       }
 
       this.createdControls.push(newControlConfig as TurboFormControlConfig);

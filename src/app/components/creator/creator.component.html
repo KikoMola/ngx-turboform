@@ -142,6 +142,48 @@
             </div>
             }
 
+            <!-- Configuración de Predictive Search -->
+            @if (controlForm.get('type')?.value === 'predictiveSearch') {
+                <div formGroupName="searchConfig" class="space-y-3 border p-3 rounded-md bg-blue-50">
+                    <h4 class="text-md font-semibold text-blue-800">Configuración de Búsqueda Predictiva</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="searchDisplayField" class="block text-sm font-medium text-gray-700">Campo a Mostrar (Display Field)</label>
+                            <input type="text" id="searchDisplayField" formControlName="displayField" class="mt-1 block w-full input-field">
+                        </div>
+                        <div>
+                            <label for="searchValueField" class="block text-sm font-medium text-gray-700">Campo de Valor (Value Field)</label>
+                            <input type="text" id="searchValueField" formControlName="valueField" class="mt-1 block w-full input-field">
+                        </div>
+                        <div>
+                            <label for="searchMinLength" class="block text-sm font-medium text-gray-700">Longitud Mínima (Min Length)</label>
+                            <input type="number" id="searchMinLength" formControlName="minLength" min="1" class="mt-1 block w-full input-field">
+                        </div>
+                        <div>
+                            <label for="searchKey" class="block text-sm font-medium text-gray-700">Clave de Búsqueda (Search Key)</label>
+                            <input type="text" id="searchKey" formControlName="searchKey" placeholder="Ej: users, products" class="mt-1 block w-full input-field">
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Configuración de Array -->
+            @if (controlForm.get('type')?.value === 'array') {
+                <div formGroupName="arrayConfig" class="space-y-3 border p-3 rounded-md bg-green-50">
+                    <h4 class="text-md font-semibold text-green-800">Configuración de Array</h4>
+                     <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="arrayAddButtonText" class="block text-sm font-medium text-gray-700">Texto Botón Añadir</label>
+                            <input type="text" id="arrayAddButtonText" formControlName="addButtonText" class="mt-1 block w-full input-field">
+                        </div>
+                        <div>
+                            <label for="arrayRemoveButtonText" class="block text-sm font-medium text-gray-700">Texto Botón Eliminar</label>
+                            <input type="text" id="arrayRemoveButtonText" formControlName="removeButtonText" class="mt-1 block w-full input-field">
+                        </div>
+                    </div>
+                </div>
+            }
+
 
             <!-- Botón para añadir el control configurado -->
             <div class="text-right">
@@ -170,5 +212,13 @@
         } @else {
         <p class="text-gray-500">Añade controles para ver la vista previa.</p>
         }
+    </div>
+</div>
+
+<div class="bg-white rounded-lg shadow-md overflow-hidden mb-4">
+    <!-- Vista Previa del código TypeScript -->
+    <div class="m-8">
+        <h3 class="text-lg font-semibold mb-3">Vista Previa del Código TypeScript</h3>
+        <pre>{{ getGeneratedConfigTypeScript() }}</pre>
     </div>
 </div>
