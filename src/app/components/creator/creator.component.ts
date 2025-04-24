@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 import { Highlight } from 'ngx-highlightjs';
 import { HighlightLineNumbers } from 'ngx-highlightjs/line-numbers';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 const ALL_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   'text', 'email', 'password', 'number', 'textarea', 'select',
@@ -24,7 +25,8 @@ const ALL_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
         ReactiveFormsModule,
         NgxTurboFormComponent,
         Highlight,
-        HighlightLineNumbers
+        HighlightLineNumbers,
+        ClipboardModule
     ],
     templateUrl: './creator.component.html',
     styles: [
@@ -446,6 +448,16 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
       });
       this.pendingDefaultValues = [];
     }
+  }
+
+  // Método para manejar el evento de copia
+  onCopy(result: boolean): void {
+      if (result) {
+          console.log('Código copiado al portapapeles!');
+          // Aquí podrías añadir lógica para mostrar un mensaje temporal al usuario
+      } else {
+          console.error('Error al copiar el código.');
+      }
   }
 
 }
