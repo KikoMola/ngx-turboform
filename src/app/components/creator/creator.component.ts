@@ -25,7 +25,7 @@ const ALL_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   ],
   templateUrl: './creator.component.html',
   styles: [
-    `:host { display: block; height: 100vh; }`,
+    `:host { display: block; }`,
     `pre { max-height: 400px; overflow-y: auto; }`
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
