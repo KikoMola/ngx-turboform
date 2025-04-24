@@ -7,6 +7,8 @@ import { FormConfigService } from '../../services/form-config.service';
 import { SearchService, SearchResult } from '../../services/search.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { Highlight } from 'ngx-highlightjs';
+import { HighlightLineNumbers } from 'ngx-highlightjs/line-numbers';
 
 const ALL_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
   'text', 'email', 'password', 'number', 'textarea', 'select',
@@ -21,7 +23,9 @@ const ALL_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
     TranslatePipe,
     CommonModule,
     ReactiveFormsModule,
-    NgxTurboFormComponent
+    NgxTurboFormComponent,
+    Highlight,
+    HighlightLineNumbers
   ],
   templateUrl: './creator.component.html',
   styles: [
