@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  EventEmitter,
   inject,
   input,
-  Input,
   output,
-  Output,
   type OnInit,
-  ChangeDetectorRef,
-  AfterViewInit,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import {
   FormArray,
@@ -20,7 +19,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { User } from '../../services/user.service';
 import { SearchResult } from '../../services/search.service';
 
 export interface TurboFormControlConfig {
@@ -98,10 +96,9 @@ export interface ValidatorConfig {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './ngx-turbo-form.component.html',
-  styleUrl: './ngx-turbo-form.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgxTurboFormComponent implements OnInit, AfterViewInit {
+export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
   config = input.required<TurboFormConfig>();
   formSubmit = output<any>();
 
@@ -121,7 +118,6 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit {
 
   formGroup!: FormGroup;
   formControls: Array<TurboFormControlConfig> = [];
-  user: User | null = null;
 
   loading = true;
   formSubmitted = false;
@@ -157,16 +153,21 @@ export class NgxTurboFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.initializeForm();
+  }
 
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      this.user = JSON.parse(userStr);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['config'] && !changes['config'].firstChange) {
+       console.log('Configuración cambiada, reinicializando formulario...', changes['config'].currentValue);
+      this.initializeForm();
+      this.initializePredictiveSearchDefaults(); 
+      this.cdr.markForCheck(); 
     }
   }
 
   ngAfterViewInit(): void {
     // Inicializar los campos de búsqueda predictiva con valores por defecto
     this.initializePredictiveSearchDefaults();
+    this.cdr.detectChanges();
   }
 
   private initializeForm() {

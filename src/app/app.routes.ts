@@ -1,12 +1,16 @@
 import { Routes } from '@angular/router';
 import { FormComponent } from './components/form/form.component';
 import { MainComponent } from './layout/main/main.component';
+import { CodeComponent } from './layout/code/code.component';
+import { CustomizeComponent } from './layout/customize/customize.component';
+
 export const routes: Routes = [
   { 
     path: '', 
     component: MainComponent,
     children: [
-      { path: 'form', component: FormComponent },
+      { path: 'form', component: CustomizeComponent },
+      { path: 'code', component: CodeComponent },
       { path: '', redirectTo: 'form', pathMatch: 'full' }
     ]
   },

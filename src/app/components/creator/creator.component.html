@@ -1,0 +1,174 @@
+<div class="bg-white rounded-lg shadow-md overflow-hidden mb-4">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">{{ 'creator.title' | translate }}</h2>
+        </div>
+
+        <!-- Formulario de Configuración de Control -->
+        <form [formGroup]="controlForm" class="space-y-4 mb-8 p-4 border rounded-md">
+            <h3 class="text-lg font-semibold mb-3">Configurar Nuevo Control</h3>
+
+            <!-- Selector de Tipo -->
+            <div>
+                <label for="type" class="block text-sm font-medium text-gray-700">Tipo de Control *</label>
+                <select id="type" formControlName="type"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option [ngValue]="null" disabled>Selecciona un tipo...</option>
+                    @for(type of availableControlTypes; track type) {
+                    <option [ngValue]="type">{{ type }}</option>
+                    }
+                </select>
+                @if (controlForm.get('type')?.invalid && controlForm.get('type')?.touched) {
+                <p class="mt-1 text-sm text-red-600">El tipo es requerido.</p>
+                }
+            </div>
+
+            <!-- Campos Comunes (visibles cuando un tipo está seleccionado) -->
+            @if (controlForm.get('type')?.value && controlForm.get('type')?.value !== 'space') {
+            <div>
+                <label for="label" class="block text-sm font-medium text-gray-700">Etiqueta {{
+                    controlForm.get('label')?.enabled ? '*' : ''}}</label>
+                <input type="text" id="label" formControlName="label"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100"
+                    [readOnly]="!controlForm.get('label')?.enabled">
+                @if (controlForm.get('label')?.invalid && controlForm.get('label')?.touched) {
+                <p class="mt-1 text-sm text-red-600">La etiqueta es requerida.</p>
+                }
+            </div>
+            }
+            @if (controlForm.get('type')?.value) {
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Nombre (ID) *</label>
+                <input type="text" id="name" formControlName="name"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm disabled:bg-gray-100"
+                    [readOnly]="!controlForm.get('name')?.enabled">
+                @if (controlForm.get('name')?.invalid && controlForm.get('name')?.touched) {
+                <p class="mt-1 text-sm text-red-600">El nombre es requerido.</p>
+                }
+            </div>
+            }
+
+            <!-- Campos Opcionales Comunes (visibles/habilitados según el tipo) -->
+            @if (controlForm.get('placeholder')?.enabled) {
+            <div>
+                <label for="placeholder" class="block text-sm font-medium text-gray-700">Placeholder</label>
+                <input type="text" id="placeholder" formControlName="placeholder"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            }
+
+            @if (controlForm.get('defaultValue')?.enabled) {
+            <div>
+                <label for="defaultValue" class="block text-sm font-medium text-gray-700">Valor por Defecto</label>
+                <!-- Podríamos cambiar el tipo de input basado en controlForm.get('type')?.value -->
+                <input type="text" id="defaultValue" formControlName="defaultValue"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            </div>
+            }
+
+            @if (controlForm.get('type')?.value && controlForm.get('type')?.value !== 'space' &&
+            controlForm.get('type')?.value !== 'titleSeparator') {
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="colspanDesktop" class="block text-sm font-medium text-gray-700">Colspan Desktop
+                        (1-12)</label>
+                    <input type="number" id="colspanDesktop" formControlName="colspanDesktop" min="1" max="12"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="colspanMobile" class="block text-sm font-medium text-gray-700">Colspan Mobile
+                        (1-12)</label>
+                    <input type="number" id="colspanMobile" formControlName="colspanMobile" min="1" max="12"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                @if(controlForm.get('required')?.enabled) {
+                <div class="flex items-center">
+                    <input id="required" type="checkbox" formControlName="required"
+                        class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                    <label for="required" class="ml-2 block text-sm text-gray-900">Requerido</label>
+                </div>
+                }
+                @if(controlForm.get('disabled')?.enabled) {
+                <div class="flex items-center">
+                    <input id="disabled" type="checkbox" formControlName="disabled"
+                        class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                    <label for="disabled" class="ml-2 block text-sm text-gray-900">Deshabilitado</label>
+                </div>
+                }
+            </div>
+            }
+
+
+            <!-- Configuración de Opciones (para select/radio) -->
+            @if (controlForm.get('type')?.value === 'select' || controlForm.get('type')?.value === 'radio') {
+            <div formArrayName="options" class="space-y-3 border p-3 rounded-md">
+                <h4 class="text-md font-semibold">Opciones</h4>
+                @for (optionGroup of options.controls; track optionGroup; let i = $index) {
+                <div [formGroupName]="i" class="grid grid-cols-11 gap-2 items-center">
+                    <div class="col-span-5">
+                        <label [for]="'optionValue' + i" class="sr-only">Valor</label>
+                        <input type="text" [id]="'optionValue' + i" formControlName="value" placeholder="Valor"
+                            class="block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm sm:text-sm">
+                        @if (optionGroup.get('value')?.invalid && optionGroup.get('value')?.touched) {
+                        <p class="mt-1 text-sm text-red-600">Valor req.</p>
+                        }
+                    </div>
+                    <div class="col-span-5">
+                        <label [for]="'optionLabel' + i" class="sr-only">Etiqueta</label>
+                        <input type="text" [id]="'optionLabel' + i" formControlName="label" placeholder="Etiqueta"
+                            class="block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm sm:text-sm">
+                        @if (optionGroup.get('label')?.invalid && optionGroup.get('label')?.touched) {
+                        <p class="mt-1 text-sm text-red-600">Etiqueta req.</p>
+                        }
+                    </div>
+                    <div class="col-span-1">
+                        <button type="button" (click)="removeOption(i)" class="text-red-600 hover:text-red-800"
+                            title="Eliminar opción">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                }
+                <button type="button" (click)="addOption()" class="text-sm text-indigo-600 hover:text-indigo-800">+
+                    Añadir Opción</button>
+            </div>
+            }
+
+
+            <!-- Botón para añadir el control configurado -->
+            <div class="text-right">
+                <button type="button" (click)="addControl()" [disabled]="controlForm.invalid"
+                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Añadir Control al Formulario
+                </button>
+            </div>
+        </form>
+
+
+
+    </div>
+</div>
+
+<div class="bg-white rounded-lg shadow-md overflow-hidden mb-4">
+    <!-- Vista Previa del Formulario -->
+    <div class="m-8">
+        <h3 class="text-lg font-semibold mb-3">Vista Previa del Formulario</h3>
+        @if (previewFormConfig().controls.length > 0) {
+        <div class="border p-4 rounded-md bg-gray-50">
+            <ngx-turbo-form #previewForm [config]="previewFormConfig()" (formSubmit)="onSubmitPreview($event)"
+                (searchRequest)="handleSearchRequest($event)" (loadDefaultValue)="handleLoadDefaultValue($event)">
+            </ngx-turbo-form>
+        </div>
+        } @else {
+        <p class="text-gray-500">Añade controles para ver la vista previa.</p>
+        }
+    </div>
+</div>

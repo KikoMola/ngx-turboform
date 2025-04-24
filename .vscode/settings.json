@@ -2,7 +2,8 @@
     "angular-schematics.schematicsDefaultOptions": {
         "angular-*": {
             "externalTemplate": true,
-            "style": "css"
+            "style": "css",
+            "inlineStyle": true
         },
         "angular-component": {
             "ngOnInit": true
