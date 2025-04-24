@@ -92,11 +92,10 @@ export interface ValidatorConfig {
 }
 
 @Component({
-  selector: 'ngx-turbo-form',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
-  templateUrl: './ngx-turbo-form.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngx-turbo-form',
+    imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+    templateUrl: './ngx-turbo-form.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgxTurboFormComponent implements OnInit, AfterViewInit, OnChanges {
   config = input.required<TurboFormConfig>();

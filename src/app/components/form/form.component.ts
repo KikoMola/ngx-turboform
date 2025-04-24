@@ -22,12 +22,11 @@ import {
 } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-form',
-  standalone: true,
-  imports: [NgxTurboFormComponent, TranslatePipe],
-  templateUrl: './form.component.html',
-  styleUrl: './form.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-form',
+    imports: [NgxTurboFormComponent, TranslatePipe],
+    templateUrl: './form.component.html',
+    styleUrl: './form.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(NgxTurboFormComponent) formComponent!: NgxTurboFormComponent;

@@ -17,22 +17,21 @@ const ALL_CONTROL_TYPES: TurboFormControlConfig['type'][] = [
 ];
 
 @Component({
-  selector: 'app-creator',
-  standalone: true,
-  imports: [
-    TranslatePipe,
-    CommonModule,
-    ReactiveFormsModule,
-    NgxTurboFormComponent,
-    Highlight,
-    HighlightLineNumbers
-  ],
-  templateUrl: './creator.component.html',
-  styles: [
-    `:host { display: block; }`,
-    `pre { max-height: 400px; overflow-y: auto; }`
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-creator',
+    imports: [
+        TranslatePipe,
+        CommonModule,
+        ReactiveFormsModule,
+        NgxTurboFormComponent,
+        Highlight,
+        HighlightLineNumbers
+    ],
+    templateUrl: './creator.component.html',
+    styles: [
+        `:host { display: block; }`,
+        `pre { max-height: 400px; overflow-y: auto; }`
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
 
