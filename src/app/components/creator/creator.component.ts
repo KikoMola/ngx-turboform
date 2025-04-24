@@ -238,10 +238,10 @@ export class CreatorComponent implements OnInit, OnDestroy, AfterViewInit {
        if (formValue.placeholder) {
            newControlConfig.placeholder = formValue.placeholder;
        }
-       if (formValue.colspanDesktop && +formValue.colspanDesktop !== 6) {
+       if (formValue.colspanDesktop) {
            newControlConfig.colspanDesktop = +formValue.colspanDesktop;
        }
-       if (formValue.colspanMobile && +formValue.colspanMobile !== 12) {
+       if (formValue.colspanMobile) {
            newControlConfig.colspanMobile = +formValue.colspanMobile;
        }
         if (formValue.disabled) {
