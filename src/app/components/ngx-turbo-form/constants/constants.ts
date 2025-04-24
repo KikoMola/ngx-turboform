@@ -63,7 +63,16 @@ export const fullHtml = `
 <form [formGroup]="formGroup" class="w-full mx-auto">
   <div class="grid grid-cols-12 gap-4">
     @for (control of formControls; track control) {
-      <div class="mb-4" [class.col-span-12]="control.colspanMobile === 12" [class.col-span-6]="control.colspanMobile === 6" [class.col-span-1]="control.colspanMobile === 1" [class.md:col-span-8]="control.colspanDesktop === 8" [class.md:col-span-4]="control.colspanDesktop === 4" [class.md:col-span-6]="control.colspanDesktop === 6" [class.md:col-span-3]="control.colspanDesktop === 3" [class.md:col-span-2]="control.colspanDesktop === 2" [class.md:col-span-12]="control.colspanDesktop === 12">
+      <div class="mb-4" 
+        [class.col-span-12]="control.colspanMobile === 12" 
+        [class.col-span-6]="control.colspanMobile === 6" 
+        [class.col-span-1]="control.colspanMobile === 1" 
+        [class.md:col-span-8]="control.colspanDesktop === 8" 
+        [class.md:col-span-4]="control.colspanDesktop === 4" 
+        [class.md:col-span-6]="control.colspanDesktop === 6" 
+        [class.md:col-span-3]="control.colspanDesktop === 3" 
+        [class.md:col-span-2]="control.colspanDesktop === 2" 
+        [class.md:col-span-12]="control.colspanDesktop === 12">
         @if (control.type === 'titleSeparator') {
           <!-- Título con separador -->
           <div class="w-full mt-2 mb-2">
@@ -132,14 +141,21 @@ export const fullHtml = `
                 [id]="control.name"
                 [placeholder]="control.placeholder || ''"
                 [formControlName]="control.name"
-                [ngClass]="['w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 transition-colors min-h-[100px]', getFocusRingClass()]"></textarea>
+                [ngClass]="[
+                    'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none 
+                    focus:ring-2 transition-colors min-h-[100px]', getFocusRingClass()
+                ]">
+              </textarea>
             }
             @case ('select') {
               <div class="relative">
                 <select
                   [id]="control.name"
                   [formControlName]="control.name"
-                  [ngClass]="['w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 transition-colors bg-white appearance-none pr-10', getFocusRingClass()]">
+                  [ngClass]="[
+                    'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none 
+                    focus:ring-2 transition-colors bg-white appearance-none pr-10', getFocusRingClass()
+                  ]">
                   @for (option of control.options; track option) {
                     <option [value]="option.value">{{ option.label | translate }}</option>
                   }
@@ -210,7 +226,12 @@ export const fullHtml = `
                   <button 
                     type="button"
                     (click)="addArrayRow(control.name)"
-                    [ngClass]="['inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2', 'bg-' + getThemeColor() + '-600 hover:bg-' + getThemeColor() + '-700 focus:ring-' + getThemeColor() + '-500']"
+                    [ngClass]="[
+                        'inline-flex items-center px-3 py-1.5 border border-transparent 
+                        text-sm font-medium rounded-md shadow-sm text-white 
+                        focus:outline-none focus:ring-2 focus:ring-offset-2', 
+                        'bg-' + getThemeColor() + '-600 hover:bg-' + getThemeColor() + '-700 focus:ring-' + getThemeColor() + '-500'
+                    ]"
                   >
                     {{ control.arrayConfig?.addButtonText || 'Añadir' | translate }}
                   </button>
@@ -291,14 +312,23 @@ export const fullHtml = `
                                     [id]="rowControl.name + '_' + i"
                                     [placeholder]="rowControl.placeholder || ''"
                                     [formControlName]="rowControl.name"
-                                    [ngClass]="['w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 transition-colors min-h-[100px]', getFocusRingClass()]"></textarea>
+                                    [ngClass]="[
+                                        'w-full px-3 py-2 border border-gray-300 rounded-md 
+                                        shadow-sm focus:outline-none focus:ring-2 transition-colors min-h-[100px]', 
+                                        getFocusRingClass()
+                                    ]">
+                                  </textarea>
                                 }
                                 @case ('select') {
                                   <div class="relative">
                                     <select
                                       [id]="rowControl.name + '_' + i"
                                       [formControlName]="rowControl.name"
-                                      [ngClass]="['w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 transition-colors bg-white appearance-none pr-10', getFocusRingClass()]">
+                                      [ngClass]="[
+                                        'w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm 
+                                        focus:outline-none focus:ring-2 transition-colors 
+                                        bg-white appearance-none pr-10', getFocusRingClass()
+                                      ]">
                                       @for (option of rowControl.options; track option) {
                                         <option [value]="option.value">{{ option.label | translate }}</option>
                                       }
@@ -378,7 +408,10 @@ export const fullHtml = `
                                 }
                               }
                             }
-                            @if (formGroup.get(rowControl.name)?.invalid && ((formGroup.get(rowControl.name)?.touched || formGroup.get(rowControl.name)?.dirty) || formSubmitted)) {
+                            @if (formGroup.get(rowControl.name)?.invalid && ( 
+                              (formGroup.get(rowControl.name)?.touched || formGroup.get(rowControl.name)?.dirty) || 
+                              formSubmitted
+                            )) {
                               <div class="mt-1 text-sm text-red-600">
                                 @if (getControlError(rowControl.name)) {
                                   {{ translateWithParams(getControlError(rowControl.name)!) }}
@@ -395,7 +428,10 @@ export const fullHtml = `
             }
           }
         }
-        @if (formGroup.get(control.name)?.invalid && ((formGroup.get(control.name)?.touched || formGroup.get(control.name)?.dirty) || formSubmitted)) {
+        @if (formGroup.get(control.name)?.invalid && ( 
+          (formGroup.get(control.name)?.touched || formGroup.get(control.name)?.dirty) || 
+          formSubmitted
+        )) {
           <div class="mt-1 text-sm text-red-600">
             @if (getControlError(control.name)) {
               {{ translateWithParams(getControlError(control.name)!) }}
@@ -406,7 +442,12 @@ export const fullHtml = `
     }
   </div>
 
-  <button type="button" (click)="onSubmit()" [ngClass]="['w-full md:w-auto px-6 py-3 text-white font-medium rounded-md shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 mt-6', getButtonClass()]">
+  <button type="button" (click)="onSubmit()" 
+    [ngClass]="[
+        'w-full md:w-auto px-6 py-3 text-white font-medium 
+        rounded-md shadow-sm transition-colors focus:outline-none 
+        focus:ring-2 focus:ring-offset-2 mt-6', getButtonClass()
+    ]">
     {{ config().submitText || 'Submit' | translate }}
   </button>
 </form>`
