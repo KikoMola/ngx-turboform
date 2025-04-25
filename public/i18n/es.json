@@ -47,6 +47,11 @@
         "viewFormButton": "Formulario",
         "viewCodeButton": "Código"
     },
+    "landing": {
+        "description": "Genera formularios dinámicos de Angular rápidamente y fácilmente desde una configuración TypeScript.",
+        "startButton": "Comenzar",
+        "githubButton": "Repositorio Oficial"
+    },
     "code": {
         "interfaceControlTitle": "Interfaz: TurboFormControlConfig",
         "interfaceControlDescription": "Esta interfaz define la estructura de los controles que se pueden usar en el formulario.",
