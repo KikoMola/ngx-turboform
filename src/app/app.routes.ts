@@ -3,7 +3,7 @@ import { FormComponent } from './components/form/form.component';
 import { MainComponent } from './layout/main/main.component';
 import { CodeComponent } from './layout/code/code.component';
 import { CustomizeComponent } from './layout/customize/customize.component';
-
+import { LandingComponent } from './layout/landing/landing.component';
 export const routes: Routes = [
   { 
     path: '', 
@@ -14,6 +14,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'form', pathMatch: 'full' }
     ]
   },
+  { path: 'landing', component: LandingComponent },
   { path: '', redirectTo: '/', pathMatch: 'full' },
   { path: '**', redirectTo: '/' }
 ];
