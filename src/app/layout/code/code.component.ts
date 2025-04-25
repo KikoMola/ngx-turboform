@@ -20,7 +20,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     :host {
       display: block;
       width: 100%;
-      padding: 1rem;
       box-sizing: border-box;
     }
   `,
