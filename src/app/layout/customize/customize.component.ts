@@ -2,12 +2,16 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
 import { CreatorComponent } from '../../components/creator/creator.component';
 import { CodeComponent } from '../code/code.component';
+import { TranslatePipe } from '@ngx-translate/core';
+
 @Component({
     selector: 'app-customize',
+    standalone: true,
     imports: [
         CommonModule,
         CreatorComponent,
-        CodeComponent
+        CodeComponent,
+        TranslatePipe
     ],
     templateUrl: './customize.component.html',
     styles: `

@@ -7,6 +7,15 @@
         "title": "Form",
         "description": "Form data"
     },
+    "landing": {
+        "description": "Generate dynamic Angular forms quickly and easily from a TypeScript configuration.",
+        "startButton": "Get Started",
+        "githubButton": "Official Repository"
+    },
+    "customize": {
+        "viewFormButton": "Form",
+        "viewCodeButton": "Code"
+    },
     "validators": {
         "required": "This field is required",
         "minlength": "This field must be at least {{ minlength }} characters",

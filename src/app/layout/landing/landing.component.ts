@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, type OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, TranslatePipe],
   templateUrl: './landing.component.html',
   styles: `
     :host {

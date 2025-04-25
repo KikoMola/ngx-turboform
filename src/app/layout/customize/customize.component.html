@@ -7,13 +7,13 @@
           class="py-2 px-4 rounded cursor-pointer transition-colors flex-1 text-center"
           [class.bg-black]="currentView === 'form'" [class.text-white]="currentView === 'form'"
           [class.text-gray-700]="currentView !== 'form'" [class.hover:bg-gray-200]="currentView !== 'form'">
-          Formulario
+          {{ 'customize.viewFormButton' | translate }}
         </button>
         <button type="button" (click)="setView('creator')"
           class="py-2 px-4 rounded cursor-pointer transition-colors flex-1 text-center"
           [class.bg-black]="currentView === 'creator'" [class.text-white]="currentView === 'creator'"
           [class.text-gray-700]="currentView !== 'creator'" [class.hover:bg-gray-200]="currentView !== 'creator'">
-          Código
+          {{ 'customize.viewCodeButton' | translate }}
         </button>
       </div>
     </div>

@@ -7,6 +7,15 @@
         "title": "Creador",
         "description": "Creador de formulario"
     },
+    "landing": {
+        "description": "Genera formularios dinámicos en Angular de forma rápida y sencilla a partir de una configuración TypeScript.",
+        "startButton": "Empezar a Crear",
+        "githubButton": "Repositorio Oficial"
+    },
+    "customize": {
+        "viewFormButton": "Formulario",
+        "viewCodeButton": "Código"
+    },
     "validators": {
         "required": "Este campo es requerido",
         "minLength": "Este campo debe tener al menos {{ minLength }} caracteres",
