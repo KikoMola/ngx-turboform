@@ -9,6 +9,7 @@ import { Router, RouterModule } from '@angular/router';
   styles: `
     :host {
       display: block;
+      height: 100%;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,7 +21,7 @@ export class LandingComponent implements OnInit {
   ngOnInit(): void { }
 
   goToDocs(): void {
-    this.router.navigate(['/customize']);
+    this.router.navigate(['/form']);
   }
 
 }

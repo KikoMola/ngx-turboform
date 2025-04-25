@@ -14,7 +14,6 @@ import { CodeComponent } from '../code/code.component';
     :host {
       display: block;
       width: 100%;
-      padding: 1rem;
       box-sizing: border-box;
     }
   `,

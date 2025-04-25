@@ -1,35 +1,29 @@
-<!-- Selector Container -->
-<div class="bg-white rounded-lg shadow-md p-4 mb-4">
-  <div class="flex space-x-2">
-    <button
-      type="button"
-      (click)="setView('form')"
-      class="py-2 px-4 rounded cursor-pointer transition-colors flex-1 text-center"
-      [class.bg-black]="currentView === 'form'"
-      [class.text-white]="currentView === 'form'"
-      [class.text-gray-700]="currentView !== 'form'"
-      [class.hover:bg-gray-200]="currentView !== 'form'"
-    >
-      Formulario
-    </button>
-    <button
-      type="button"
-      (click)="setView('creator')"
-      class="py-2 px-4 rounded cursor-pointer transition-colors flex-1 text-center"
-      [class.bg-black]="currentView === 'creator'"
-      [class.text-white]="currentView === 'creator'"
-      [class.text-gray-700]="currentView !== 'creator'"
-      [class.hover:bg-gray-200]="currentView !== 'creator'"
-    >
-      Código
-    </button>
-  </div>
-</div>
+<main class="flex-1 overflow-auto p-6 bg-gray-200">
+  <div class="container mx-auto">
+    <!-- Selector Container -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+      <div class="flex space-x-2">
+        <button type="button" (click)="setView('form')"
+          class="py-2 px-4 rounded cursor-pointer transition-colors flex-1 text-center"
+          [class.bg-black]="currentView === 'form'" [class.text-white]="currentView === 'form'"
+          [class.text-gray-700]="currentView !== 'form'" [class.hover:bg-gray-200]="currentView !== 'form'">
+          Formulario
+        </button>
+        <button type="button" (click)="setView('creator')"
+          class="py-2 px-4 rounded cursor-pointer transition-colors flex-1 text-center"
+          [class.bg-black]="currentView === 'creator'" [class.text-white]="currentView === 'creator'"
+          [class.text-gray-700]="currentView !== 'creator'" [class.hover:bg-gray-200]="currentView !== 'creator'">
+          Código
+        </button>
+      </div>
+    </div>
 
-<!-- Conditional Components -->
-@if (currentView === 'form') {
+    <!-- Conditional Components -->
+    @if (currentView === 'form') {
     <app-creator></app-creator>
     <!-- <app-form></app-form> -->
-} @else if (currentView === 'creator') {
+    } @else if (currentView === 'creator') {
     <app-code></app-code>
-}
+    }
+  </div>
+</main>
