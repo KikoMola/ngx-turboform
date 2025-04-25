@@ -4,6 +4,7 @@ import { Highlight } from 'ngx-highlightjs';
 import { HighlightLineNumbers } from 'ngx-highlightjs/line-numbers';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-code',
@@ -11,7 +12,8 @@ import { CommonModule } from '@angular/common';
         CommonModule,
         Highlight,
         HighlightLineNumbers,
-        ClipboardModule
+        ClipboardModule,
+        TranslatePipe
     ],
     templateUrl: './code.component.html',
     styles: `

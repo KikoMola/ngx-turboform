@@ -16,6 +16,16 @@
         "viewFormButton": "Form",
         "viewCodeButton": "Code"
     },
+    "code": {
+        "interfaceControlTitle": "Interface: TurboFormControlConfig",
+        "interfaceControlDescription": "This interface defines the structure of the controls that can be used in the form.",
+        "interfaceFormTitle": "Interface: TurboFormConfig",
+        "interfaceFormDescription": "This interface defines the form structure and the controls that can be used.",
+        "htmlTitle": "HTML",
+        "htmlDescription": "This is the form's HTML. You should copy and paste it into the HTML file of the component created to use the form.",
+        "tsTitle": "Essential TypeScript Component",
+        "tsDescription": "This is the essential TypeScript code. You should copy and paste it into the TypeScript file of the component created to use the form."
+    },
     "validators": {
         "required": "This field is required",
         "minlength": "This field must be at least {{ minlength }} characters",

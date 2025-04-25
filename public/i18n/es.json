@@ -16,6 +16,16 @@
         "viewFormButton": "Formulario",
         "viewCodeButton": "Código"
     },
+    "code": {
+        "interfaceControlTitle": "Interfaz: TurboFormControlConfig",
+        "interfaceControlDescription": "Esta interfaz define la estructura de los controles que se pueden usar en el formulario.",
+        "interfaceFormTitle": "Interfaz: TurboFormConfig",
+        "interfaceFormDescription": "Esta interfaz define la estructura del formulario y los controles que se pueden usar en el formulario.",
+        "htmlTitle": "HTML",
+        "htmlDescription": "Este es el HTML del formulario. Debe copiarlo y pegarlo en el archivo HTML del componente creado para usar el formulario.",
+        "tsTitle": "Componente TypeScript Esencial",
+        "tsDescription": "Este es el código TypeScript esencial que debe copiar y pegar en el archivo TypeScript del componente creado para usar el formulario."
+    },
     "validators": {
         "required": "Este campo es requerido",
         "minLength": "Este campo debe tener al menos {{ minLength }} caracteres",
